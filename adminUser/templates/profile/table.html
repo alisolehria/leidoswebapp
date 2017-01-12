@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+      <table class="table table-responsive">
+                  <thead class="headTable">
+                  <th class="headText">Current Employees</th>
+                  <th class="headText">On Going Projects</th>
+                  <th class="headText">Upcoming Projects</th>
+
+                  </thead>
+    <tbody>
+          <tr class="headTable">
+              <td class="num"><a href="{% url 'adminUser:currentstaff' %}">{{ num }}</a></td>
+              <td class="projectNum"><a href="{% url 'adminUser:currentprojects' %}">{{ projectNum }}</a></td>
+              <td class="upcoming"><a href="{% url 'adminUser:upcomingprojects' %}">{{ upcoming.count }}</a></td>
+          </tr>
+
+    </tbody>
+  </table>
+
+</body>
+</html>

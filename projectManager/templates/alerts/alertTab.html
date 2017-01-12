@@ -1,0 +1,62 @@
+ <a href="{% url 'projectManager:profile' %}" class="btn btn-primary btn-lg btn-new">
+          <span class="glyphicon glyphicon-dashboard"></span> <h7>Profile</h7>
+        </a>
+      </button>
+
+<br>
+<br>
+  <div>
+        <div class="panel panel-info" >
+        {% if alertList.count != 0 %}
+        <div class="btn btn-primary btn-lg btn-new" id="alerts">
+              <span class="glyphicon glyphicon-bell"> <a class="panel-title" data-toggle="collapse" data-parent="#panel-731859" href="#panel-element-748460">Alerts ({{ alertList.count }}) </a></span>
+          </div>
+        {% endif %}
+
+        {% if alertList.count == 0 %}
+ <div class="btn btn-primary btn-lg btn-new" id="alertsNone">
+              <span class="glyphicon glyphicon-bell"> <a class="panel-title" data-toggle="collapse" data-parent="#panel-731859" href="#panel-element-748460">Alerts ({{ alertList.count }}) </a></span>
+          </div>
+
+        {% endif %}
+          <div id="panel-element-748460" class="panel-collapse collapse">
+            <div class="panel-body">
+            <div class="tabbable" id="tabs-243166">
+            <ul class="nav nav-tabs">
+
+
+
+            <div class="tab-content">
+              <div class="tab-pane active" id="panel-330081">
+               <div class="alert alert-info"><a href="{% url 'projectManager:alerts' %}">See All</a>
+
+</div>
+                {% if alertList.count != 0 %}
+                    {% for alert in alertList %}
+                    <div class="alert alert-info"><a href="{% url 'projectManager:alerts' %}#{{ alert.alertID }}">
+  <strong>{{ alert.alertType }} Alert from {{ alert.fromStaff.user.last_name }}</strong></a>
+
+</div>
+            {% endfor %}
+                  {% endif %}
+
+              </div>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+ <div>
+<a href="{% url 'projectManager:requestproject' %}" class="btn btn-primary btn-lg btn-new">
+          <span class="glyphicon glyphicon-cog"></span><h7>Request Project</h7>
+        </a>
+ </div>
+        <div>
+            <br>
+<a href="{% url 'adminUser:dashboard' %}" class="btn btn-primary btn-lg btn-new">
+    <span class="glyphicon glyphicon-plane"></span><h7> Request Leave</h7>
+        </a>
+
+            <br><br>

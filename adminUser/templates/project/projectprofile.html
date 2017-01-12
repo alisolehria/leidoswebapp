@@ -1,0 +1,248 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <title>{{ info.projectName }}</title>
+
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+      <script src="{% static "js/search.js" %}"></script>
+     <link href="{% static "css/stylesheet.css" %}" rel="stylesheet">
+
+  </head>
+  <body>
+    <div class="col-sm-1"></div>     <div class="col-sm-10"><div class="container-fluid" style="background-color:#dbdbdb;">
+  <div class="row">
+          <div>
+          <img src={% static 'img/leidos_logo_2013.jpg' %} alt="leidosLogo" width="100%"> </a>  </li>
+        </h1>
+        
+      <center><nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+     
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="{% url 'adminUser:addstaff' %}">Add Staff</a></li>
+      <li><a href="{% url 'adminUser:stafflist' %}">Staff List</a> </li>
+      <li><a href="{% url 'adminUser:addproject' %}">Add Project</a></li>
+      <li><a href="{% url 'adminUser:projectlist' %}">Projects List</a></li>
+        <li><a href="{% url 'adminUser:projectlist' %}">Matchmaking</a></li>
+    </ul>
+  </div>
+</nav>
+</div>
+<div class="panel panel-default">
+  <div class="panel-top page-title">{{ info.projectName }}</div>
+</div>
+ {% if messages %}
+        <div class = "row">
+      <div class="col-sm-6 col-sm-offset-3">
+    {% for message in messages %}
+    <p{% if message.tags %} class="alert alert-success"{% endif %}>{{ message }}</p>
+    {% endfor %}
+</div>
+        </div>
+{% endif %}
+
+<div class="container-fluid">
+
+     <div class="pull-right"><a href = {% url 'accounts:logoutUser' %} class="btn btn-danger btn-md"> <span class="glyphicon glyphicon-log-out"></span>Sign out</a></div>
+<br>
+        <br>
+  <div class="row">
+    <div class="col-md-2">
+
+  <div id="refresh">
+<script> jQuery(document).ready(function (){jQuery("#refresh").load('{% url "adminUser:alertTab" %}');})
+         </script>
+              <script>
+jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load('{% url "adminUser:alertTab" %}');
+   },6000)
+       });</script>
+        </div>
+
+    </div>
+
+    <div class="col-md-8">
+
+        <div class="container container-rounded">
+        <table class="table table-responsive">
+    <tbody>
+     <tr>
+        <td class="profile">Project ID: {{ info.projectID }}</td>
+         <td></td>
+      </tr>
+      <tr>
+        <td class="profile">Project Name: {{ info.projectName }}</td>
+          <td class="profile"></td>
+      </tr>
+      <tr>
+          <td class="profile"><a class="profileLink" href="{% url 'adminUser:staffprofile' info.projectManager.staffID %}">Project Manager: {{ info.projectManager.user.first_name }} {{ info.projectManager.user.last_name }}</a></td>
+        <td class="profile"></td>
+      </tr>
+      <tr>
+          <td class="profile">Start Date: {{ info.startDate}}</td>
+       <td class="profile">End Date: {{ info.endDate }}</td>
+      </tr>
+     <tr>
+        <td class="profile">Country: {{ info.location.country }}</td>
+         <td class="profile">City: {{ info.location.city }}</td>
+      </tr>
+     <tr>
+        <td class="profile">Description: {{ info.description}}</td>
+         <td class="profile"></td>
+      </tr>
+     <tr>
+        <td class="profile">Budget: {{ info.budget }} AED</td>
+         <td class="profile">Status: {{ info.status }}</td>
+      </tr>
+
+    </tbody>
+  </table>
+        </div>
+<br>
+   <br>
+           <div class="pull-right">
+
+                   <form  class = "form-inline" action="{% url 'adminUser:projectprofile' info.projectID %}" method="post">
+                     {% csrf_token %}
+                   <div class="form-group">
+                         <a href="{% url 'adminUser:editproject' info.projectID %}" class="btn btn-info btn-md">
+          <span class="glyphicon glyphicon-edit"></span> Edit Info
+        </a>
+                       {% if info.status == "Pending Approval" %}
+          <button class="btn btn-danger btn-md" value="{{ info.projectID }}" name="decline"> <span class="glyphicon glyphicon-thumbs-down"></span> Decline</button>
+
+              <button class="btn btn-success btn-md" value="{{ info.projectID }}" name="accept"> <span class="glyphicon glyphicon-thumbs-up"></span> Approve</button>
+
+
+
+
+     {% endif %}
+
+
+</div>
+              </form>
+        </div>
+
+        <br>
+
+    <br>
+    <h3>Staff Working on this Project</h3>
+     <div class="input-group pull-right">
+           <span class="input-group-addon">
+        <i class="glyphicon glyphicon-search"></i>
+    </span>
+    <input type="text" class="search form-control" placeholder="Search Staff">
+</div>
+<span class="counter pull-right"></span>
+  <table class="table table-responsive table-bordered listTable results">
+        <thead>
+          <tr>
+
+            <th>Staff ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+              <th>DOB</th>
+              <th>Designation</th>
+              <th>Work Status</th>
+              <th>Skill Level</th>
+
+          </tr>
+        <tr class="warning no-result">
+      <td colspan="7"><i class="fa fa-warning"></i> No result</td>
+    </tr>
+        </thead>
+        <tbody>
+        {% for staff in info.staffID.all %}
+            <tr>
+                <td><a href="{% url 'adminUser:staffprofile' staff.staffID %}">{{ staff.staffID }}</a></td>
+            <td>{{ staff.user.first_name }}</td>
+            <td>{{ staff.user.last_name }}</td>
+            <td>{{ staff.dateOfBirth }}</td>
+            <td>{{ staff.designation }}</td>
+            <td>{{ staff.workStatus }}</td>
+            <td>{{ staff.skillLevel }}</td>
+            </tr>
+
+
+        {% endfor %}
+
+        </tbody>
+      </table>
+            <br>
+     <div class="pull-right">
+    <a href="{% url 'adminUser:addpstaff' info.projectID %}" class="btn btn-success btn-md">
+          <span class="glyphicon glyphicon-plus"></span> Add staff
+        </a>
+     </div>
+        <br>
+        <br>
+<br>
+    <h3>Skills Required for this Project</h3>
+         <div class="input-group pull-right">
+           <span class="input-group-addon">
+        <i class="glyphicon glyphicon-search"></i>
+    </span>
+   <input type="text" id="skillsearch" onkeyup="searchSkills()" class="form-control" placeholder="Search Skill">
+</div>
+<span class="counter pull-right"></span>
+              <table id="skilltable" class="table table-responsive table-bordered listTable results">
+              <thead>
+              <tr>
+                  <th class="success">Skill Name</th>
+                  <th class="success">Hours Required</th>
+              </tr>
+                <tr class="warning no-results">
+      <td colspan="2" class="warning"><i class="fa fa-warning"></i> No result</td>
+    </tr>
+              </thead>
+        <tbody>
+
+            {% for skills,hrs in skillwithhrs.items  %}
+
+            <tr>
+
+            <td class="danger">{{ skills}}</td>
+
+            <td class = "danger">{{ hrs }}</td>
+
+  {% endfor %}
+
+        </tbody>
+      </table>
+       <br>
+     <div class="pull-right">
+    <a href="{% url 'adminUser:addpskill' info.projectID %}" class="btn btn-success btn-md">
+          <span class="glyphicon glyphicon-plus"></span> Add Skills
+        </a>
+     </div>
+        <br>
+        <br>
+<br>
+
+      <grammarly>
+        <div class="_9b5ef6-textarea_btn _9b5ef6-not_focused">
+          <div class="_9b5ef6-transform_wrap">
+            <div class="_9b5ef6-status">
+
+            </div>
+          </div>
+        </div>
+      </grammarly>
+
+    </div>
+
+  </div>
+          <div class="panel panel-default">
+  <div class="panel-bottom" style="background-color:#000854;" ><center><font size="5" color="#4c5def">Developed By SYNTAX </font> </center></div>
+
+</div>
+</div>
+
+
+
+</body>
+</html>

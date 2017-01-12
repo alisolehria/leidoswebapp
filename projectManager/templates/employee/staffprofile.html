@@ -1,0 +1,189 @@
+{% load staticfiles %}
+{% load countries %}
+<!DOCTYPE html>
+<html lang="en" xmlns:border-radius="http://www.w3.org/1999/xhtml">
+  <head>
+      <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ info.user.first_name }} {{ info.user.last_name }}</title>
+
+
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+ <script src="{% static "js/search.js" %}"></script>
+     <link href="{% static "css/stylesheet.css" %}" rel="stylesheet">
+
+
+  </head>
+  <body>
+    <div class="col-sm-1"></div>     <div class="col-sm-10"><div class="container-fluid" style="background-color:#dbdbdb;">
+  <div class="row">
+          <div>
+          <img src="{% static 'img/leidos_logo_2013.jpg' %}" alt="" width="100%" > </a>  </li>
+        </h1>
+        
+      <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+     
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="{% url 'projectManager:myprojects' %}">My Projects</a></li>
+      <li><a href="{% url 'projectManager:projectlist' %}">Projects List</a></li>
+        <li><a href="{% url 'adminUser:projectlist' %}">Matchmaking</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="panel">
+  <div class="page-title" >{{ info.user.first_name }} {{ info.user.last_name }}</div>
+</div>
+
+
+   <div class="container-fluid">
+   <div class="pull-right"><a href = {% url 'accounts:logoutUser' %} class="btn btn-danger btn-md"> <span class="glyphicon glyphicon-log-out"></span>Sign out</a></div>
+  <br><br>
+       <div class="row">
+    <div class="col-md-2">
+
+<div id="alert">
+<script> jQuery(document).ready(function (){jQuery("#alert").load('{% url "projectManager:alertTab" %}');})
+         </script>
+              <script>
+jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('{% url "projectManager:alertTab" %}');
+   },10000)
+       });</script>
+        </div>
+           </div>
+
+
+
+
+          <div class="col-md-8">
+ <div class="container container-rounded">
+        <table class="table table-responsive">
+    <tbody>
+     <tr>
+        <td class="profile">Staff ID: {{ info.staffID }}</td>
+          <td class="profile">Staff ID: {{ info.user.email }}</td>
+      </tr>
+      <tr>
+        <td class="profile">First Name: {{ info.user.first_name }}</td>
+          <td class="profile">Last Name: {{ info.user.last_name }}</td>
+      </tr>
+      <tr>
+          <td class="profile">Nationality: {% get_country info.nationality as country %} {{ country.name }} </td>
+        <td class="profile">Status: {{ info.workStatus }}</td>
+      </tr>
+      <tr>
+          <td class="profile">Designation: {{ info.designation}}</td>
+       <td class="profile">Date Of Birth: {{ info.dateOfBirth }}</td>
+      </tr>
+     <tr>
+        <td class="profile">Preferred Country: {{ info.preferredLocation.country }}</td>
+         <td class="profile">Preferred City: {{ info.preferredLocation.city }}</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+     </div>
+
+
+        <br>
+  <div class="container">
+  <h3>Skill Level</h3>
+  <div class="progress">
+    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="{{ info.skillLevel }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ info.skillLevel }}%">
+      {{ info.skillLevel }}% Skill Level
+    </div>
+  </div>
+</div>
+        <br>
+  <div class="refresh">
+              <table class="table table-responsive table-full">
+                  <thead class="headTable">
+                  <th class="headText">On Going Projects</th>
+                  <th class="headText">Upcoming Projects</th>
+                  <th class="headText">Completed Projects</th>
+                  </thead>
+    <tbody>
+          <tr class="headTable">
+              <td class="num"><a href="{% url 'projectManager:currentprojectsget' info.staffID %}">{{ ongoing }}</a></td>
+              <td class="projectNum"><a href="{% url 'projectManager:upcomingprojectsget' info.staffID %}">{{ upcoming }}</a></td>
+              <td class="upcoming"><a href="{% url 'projectManager:completedprojectsget' info.staffID  %}">{{ completed }}</a></td>
+          </tr>
+
+    </tbody>
+  </table>
+          </div>
+        <br>
+    <h3>Skills</h3>
+         <div class="input-group pull-right">
+           <span class="input-group-addon">
+        <i class="glyphicon glyphicon-search"></i>
+    </span>
+    <input type="text" class="search form-control" placeholder="Search Skills">
+</div>
+<span class="counter pull-right"></span>
+              <table class="table table-responsive table-bordered listTable results">
+              <thead>
+              <tr>
+                  <th class="success">Skill Name</th>
+                  <th class="success">Hours Available</th>
+
+              </tr>
+                <tr class="warning no-result">
+      <td colspan="4" class="warning"><i class="fa fa-warning"></i> No result</td>
+    </tr>
+              </thead>
+        <tbody>
+
+
+            {% for skills,hrs in skillwithhrs.items  %}
+
+            <tr>
+
+            <td class="danger">{{ skills}}</td>
+
+            <td class = "danger">{{ hrs }}</td>
+
+  {% endfor %}
+
+
+            </tr>
+
+
+
+
+        </tbody>
+      </table>
+        <br>
+
+
+
+
+
+      <grammarly>
+        <div class="_9b5ef6-textarea_btn _9b5ef6-not_focused">
+          <div class="_9b5ef6-transform_wrap">
+            <div class="_9b5ef6-status">
+
+            </div>
+          </div>
+        </div>
+      </grammarly>
+    </div>
+  </div>
+</div>
+     <div class="panel panel-default">
+  <div class="panel-bottom" style="background-color:#000854;" ><center><font size="5" color="#4c5def">Developed By SYNTAX </font> </center></div>
+
+</div>
+    </div>
+    </div>
+</body>
+</html>

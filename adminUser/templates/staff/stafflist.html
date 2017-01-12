@@ -1,0 +1,134 @@
+{% load staticfiles %}
+<html lang="en">
+  <head>
+
+    <title>{{ title }}</title>
+
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+      <script src="{% static "js/search.js" %}"></script>
+     <link href="{% static "css/stylesheet.css" %}" rel="stylesheet">
+
+
+
+  </head>
+  <body>
+    <div class="col-sm-1"></div>     <div class="col-sm-10"><div class="container-fluid" style="background-color:#dbdbdb;">
+  <div class="row">
+          <div>
+          <img src={% static 'img/leidos_logo_2013.jpg' %} alt="leidosLogo" width="100%"> </a>  </li>
+        </h1>
+        
+      <center><nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+     
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="{% url 'adminUser:addstaff' %}">Add Staff</a></li>
+      <li class="active"><a href="{% url 'adminUser:stafflist' %}">Staff List</a> </li>
+      <li><a href="{% url 'adminUser:addproject' %}">Add Project</a></li>
+      <li><a href="{% url 'adminUser:projectlist' %}">Projects List</a></li>
+        <li><a href="{% url 'adminUser:projectlist' %}">Matchmaking</a></li>
+    </ul>
+  </div>
+</nav>
+</div>
+<div class="panel panel-default">
+  <div class="panel-top page-title">{{ title }}</div>
+</div>
+</div>
+
+
+       <div class="container-fluid">
+</div>
+     <div class="pull-right"><a href = {% url 'accounts:logoutUser' %} class="btn btn-danger btn-md"> <span class="glyphicon glyphicon-log-out"></span>Sign out</a></div>
+<br>
+        <br>
+  <div class="row">
+    <div class="col-md-2">
+
+<div id="refresh">
+<script> jQuery(document).ready(function (){jQuery("#refresh").load('{% url "adminUser:alertTab" %}');})
+         </script>
+              <script>
+jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load('{% url "adminUser:alertTab" %}');
+   },6000)
+       });</script>
+        </div>
+
+    </div>
+    <div class="col-md-10">
+      <div class="input-group pull-right">
+           <span class="input-group-addon">
+        <i class="glyphicon glyphicon-search"></i>
+    </span>
+    <input type="text" class="search form-control" placeholder="Search">
+</div>
+<span class="counter pull-right"></span>
+    <form action="" method="POST">
+    {% csrf_token %}
+      <table class="table table-responsive table-bordered listTable results">
+        <thead>
+          <tr>
+            
+            <th>Staff ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+              <th>DOB</th>
+              <th>Designation</th>
+              <th>Work Status</th>
+              <th>Skill Level</th>
+
+          </tr>
+        <tr class="warning no-result">
+      <td colspan="4"><i class="fa fa-warning"></i> No result</td>
+    </tr>
+        </thead>
+        <tbody>
+        {% for staff in list %}
+            <tr>
+                <td><a href="{% url 'adminUser:staffprofile' staff.staffID %}">{{ staff.staffID }}</a></td>
+            <td>{{ staff.user.first_name }}</td>
+            <td>{{ staff.user.last_name }}</td>
+            <td>{{ staff.dateOfBirth }}</td>
+            <td>{{ staff.designation }}</td>
+            <td>{{ staff.workStatus }}</td>
+            <td>{{ staff.skillLevel }}</td>
+            <td><input type="checkbox" name="selectStaff" value="{{ staff.staffID }}" id="{{ staff.staffID }}"></td>
+            </tr>
+
+
+        {% endfor %}
+
+        </tbody>
+      </table>
+<br>
+         <input class="btn btn-primary btn-md pull-right" type="submit" value="Open Profile" />
+        </form>
+        <br>
+        <br>
+      <br>
+      <grammarly>
+        <div class="_9b5ef6-textarea_btn _9b5ef6-not_focused">
+          <div class="_9b5ef6-transform_wrap">
+            <div class="_9b5ef6-status">
+
+            </div>
+          </div>
+        </div>
+      </grammarly>
+
+    </div>
+
+  </div>
+          <div class="panel panel-default">
+  <div class="panel-bottom" style="background-color:#000854;" ><center><font size="5" color="#4c5def">Developed By SYNTAX </font> </center></div>
+
+</div>
+</div>
+
+
+
+</body>
+</html>

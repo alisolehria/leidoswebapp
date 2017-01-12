@@ -1,0 +1,184 @@
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <title>{{ title }}</title>
+
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<link href="{% static "css/stylesheet.css" %}" rel="stylesheet">
+      {{ form.media }}
+
+
+  </head>
+  <body>
+    <div class="col-sm-1"></div>     <div class="col-sm-10"><div class="container-fluid" style="background-color:#dbdbdb;">
+  <div class="row">
+          <div>
+          <img src={% static 'img/leidos_logo_2013.jpg' %} alt="leidosLogo" width="100%"> </a>  </li>
+        </h1>
+
+      <div><nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="{% url 'adminUser:addstaff' %}">Add Staff</a></li>
+      <li><a href="{% url 'adminUser:stafflist' %}">Staff List</a> </li>
+      <li><a href="{% url 'adminUser:addproject' %}">Add Project</a></li>
+      <li><a href="{% url 'adminUser:projectlist' %}">Projects List</a></li>
+        <li><a href="{% url 'adminUser:projectlist' %}">Matchmaking</a></li>
+    </ul>
+  </div>
+</nav>
+
+
+<div class="panel panel-default">
+  <div class="panel-top page-title">Add Skill for project: {{ title }}</div>
+</div>
+      </div>
+    {% if messages %}
+        <div class = "row">
+      <div class="col-sm-6 col-sm-offset-3">
+    {% for message in messages %}
+    <p{% if message.tags %} class="alert alert-success"{% endif %}>{{ message }}</p>
+        </div>
+      </div>
+    {% endfor %}
+
+{% endif %}
+
+
+<div class="container-fluid">
+
+     <div class="pull-right"><a href = {% url 'accounts:logoutUser' %} class="btn btn-danger btn-md"> <span class="glyphicon glyphicon-log-out"></span>Sign out</a></div>
+<br>
+        <br>
+
+  <div class="row">
+    <div class="col-md-2">
+
+<div id="refresh">
+<script> jQuery(document).ready(function (){jQuery("#refresh").load('{% url "adminUser:alertTab" %}');})
+         </script>
+              <script>
+jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load('{% url "adminUser:alertTab" %}');
+   },6000)
+       });</script>
+        </div>
+
+    </div>
+
+    <div class="col-md-10">
+         <h3>Add Skills</h3>
+         <div class="input-group pull-right">
+           <span class="input-group-addon">
+        <i class="glyphicon glyphicon-search"></i>
+    </span>
+    <input type="text" class="search form-control" placeholder="Search Skills">
+</div>
+
+<span class="counter pull-right"></span>
+     <form action="{% url 'adminUser:addpskill' title.projectID %}" method="post">
+    <br><br>
+    <h4>Please select a skill, and add its corresponding value of hours</h4>
+              <table class="table table-responsive table-bordered listTable results">
+              <thead>
+              <tr>
+                  <th class="success">Skill ID</th>
+                  <th class="success">Skill Name</th>
+                  <th class="success">Hours Required</th>
+              </tr>
+                <tr class="warning no-result">
+      <td colspan="4" class="warning"><i class="fa fa-warning"></i> No result</td>
+    </tr>
+              </thead>
+        <tbody>
+
+
+
+            {% csrf_token %}
+
+            {% for skills in skillset%}
+
+            <tr>
+
+            <td class="danger">{{ skills.skillID}}</td>
+
+            <td class = "danger">{{ skills.skillName }}</td>
+            <td class = "danger col-xs-2"><input type="number" class="form-control" name="hours" min="1" id="inputhours{{ forloop.counter }}" disabled></td>
+             <td class = "danger"><input type="checkbox" value="{{ skills.skillID }}" name="skillselec" id="selectskill{{ forloop.counter }}"></td>
+
+
+
+            </tr>
+        {% endfor %}
+
+
+        </tbody>
+      </table>
+        <script>
+            function check() {
+
+
+
+                    for (var i = 1; i <= {{ skillset.count }}; i++) {
+                              var checkbox = document.getElementById("selectskill" + i); // get element
+                        if(checkbox.checked){
+                               document.getElementById("inputhours"+i).required = true;
+                                document.getElementById("submitskill").disabled = false;
+                                document.getElementById("saveskill").disabled = false;
+                                document.getElementById("inputhours"+i).disabled = false;
+    }
+                    else{
+                            document.getElementById("inputhours"+i).required = false;
+                            document.getElementById("inputhours"+i).disabled = true;
+                             document.getElementById("inputhours"+i).value = "";
+
+                        }
+                        var checkinputs = document.querySelectorAll('input[type=checkbox]');
+
+                    }
+                    var textinputs = document.querySelectorAll('input[type=checkbox]');
+                    var empty = [].filter.call( textinputs, function( check ) {
+                                        return !check.checked
+                        });
+
+                        if (textinputs.length == empty.length) {
+                                            document.getElementById("submitskill").disabled = true;
+                                            document.getElementById("saveskill").disabled = true;
+}
+}
+
+            setInterval(check, 1);
+
+        </script>
+
+
+        <br>
+        <br>
+    <div class="pull-right">
+                        <input class="btn btn-success btn-md" type="submit" value="Save and Add Staff" id="saveskill" name="continue" disabled/>
+                        <input class="btn btn-success btn-md" type="submit" value="Add Skill(s)" id="submitskill" name="save" disabled/>
+                            </div>
+<br>
+        <br><br>
+</form>
+
+    </div>
+
+  </div>
+          <div class="panel panel-default">
+  <div class="panel-bottom" style="background-color:#000854;" ><center><font size="5" color="#4c5def">Developed By SYNTAX </font> </center></div>
+
+</div>
+</div>
+
+
+
+</body>
+</html>
