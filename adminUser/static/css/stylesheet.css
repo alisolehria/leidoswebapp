@@ -5763,7 +5763,7 @@ button.close {
 
 
 .headTable{
-    border: 2px dashed black;
+    border: 2px solid black;
 }
 
 .headText{
@@ -5793,11 +5793,11 @@ button.close {
 }
 
 .rowTable{
-    border: 2px dotted black;
+    border: 2px solid black;
 }
 
 .headTable1{
-    border: 2px dashed black;
+    border: 2px solid black;
     border-bottom-style: solid;
 }
 
@@ -5812,6 +5812,14 @@ button.close {
 }
 .navbar .navbar-inner {
     padding: 0;
+}
+
+
+.table-scroll{
+    overflow-y:scroll;
+    height:500px;
+    display: block;
+
 }
 
 .navbar .nav li {

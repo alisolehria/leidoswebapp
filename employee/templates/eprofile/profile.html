@@ -13,7 +13,7 @@
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 
-    <script src="{% static "js/search.js" %}"></script>
+
      <link href="{% static "css/stylesheet.css" %}" rel="stylesheet">
 
 
@@ -31,17 +31,14 @@
      
     </div>
     <ul class="nav navbar-nav">
-      <li class="#"><a href="{% url 'adminUser:addstaff' %}">Add Staff</a></li>
-      <li><a href="{% url 'adminUser:stafflist' %}">Staff List</a> </li>
-      <li><a href="{% url 'adminUser:addproject' %}">Add Project</a></li>
-      <li><a href="{% url 'adminUser:projectlist' %}">Projects List</a></li>
-        <li><a href="{% url 'adminUser:projectlist' %}">Matchmaking</a></li>
+      <li><a href="{% url 'projectManager:myprojects' %}">My Projects</a></li>
+      <li><a href="{% url 'projectManager:projectlist' %}">Projects List</a></li>
     </ul>
   </div>
 </nav>
 
 <div class="panel">
-  <div class="page-title" >{{ title }}'s Dashboard</div>
+  <div class="page-title" >{{ title }}'s Profile</div>
 </div>
 
 
@@ -52,11 +49,11 @@
     <div class="col-md-2">
 
 <div id="alert">
-<script> jQuery(document).ready(function (){jQuery("#alert").load('{% url "adminUser:alertTab" %}');})
+<script> jQuery(document).ready(function (){jQuery("#alert").load('{% url "employee:alertTab" %}');})
          </script>
               <script>
-jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('{% url "adminUser:alertTab" %}');
-   },6000)
+jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('{% url "employee:alertTab" %}');
+   },10000)
        });</script>
         </div>
            </div>
@@ -89,20 +86,27 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
     </tbody>
   </table>
               <br><br>
+ <div class="refresh">
+              <table class="table table-responsive table-full">
+                  <thead class="headTable">
+                  <th class="headText">My On Going Projects</th>
+                  <th class="headText">My Upcoming Projects</th>
+                  <th class="headText">My Completed Projects</th>
+                  </thead>
+    <tbody>
+          <tr class="headTable">
+              <td class="num"><a href="{% url 'projectManager:currentprojectsget' info.staffID %}">{{ ongoing }}</a></td>
+              <td class="projectNum"><a href="{% url 'projectManager:upcomingprojectsget' info.staffID %}">{{ upcoming.count }}</a></td>
+              <td class="upcoming"><a href="{% url 'projectManager:completedprojectsget' info.staffID  %}">{{ completed }}</a></td>
+          </tr>
 
-          <div id="refresh">
-
-         <script> jQuery(document).ready(function (){jQuery("#refresh").load('{% url "adminUser:tableview" %}');})
-         </script>
-              <script>
-jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load('{% url "adminUser:tableview" %}');
-   },6000)
-       });</script>
-
+    </tbody>
+  </table>
           </div>
+
               <br><br>
-          <h2>Upcoming Projects</h2>
-          <div class="input-group pull-right">
+          <h2>My Upcoming Projects</h2>
+                     <div class="input-group pull-right">
            <span class="input-group-addon">
         <i class="glyphicon glyphicon-search"></i>
     </span>
@@ -111,7 +115,7 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
 <span class="counter pull-right"></span>
               <table class="table table-responsive table-hover table-scroll listTable results">
 
-<tbody>
+    <tbody>
             <tr class="headTable1">
                 <td><h4>Project ID</h4></td>
                 <td><h4>Name</h4></td>
@@ -120,13 +124,11 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
                 <td><h4>End Date</h4></td>
                 <td><h4>Location</h4></td>
             </tr>
-
-
             {% for projects in upcoming %}
                 <tr class="rowTable">
-                    <td><p><a href="{% url 'adminUser:projectprofile' projects.projectID %}">{{ projects.projectID }}</a></p></td>
+                    <td><p><a href="{% url 'projectManager:projectprofile' projects.projectID %}">{{ projects.projectID }}</a></p></td>
                     <td><p>{{ projects.projectName }}</p></td>
-                <td><p><a href="{% url 'adminUser:staffprofile' projects.projectManager.staffID %}">{{ projects.projectManager.user.first_name}} {{ projects.projectManager.user.last_name}} </p> </a></td>
+                <td><p><a href="{% url 'projectManager:staffprofile' projects.projectManager.staffID %}">{{ projects.projectManager.user.first_name}} {{ projects.projectManager.user.last_name}} </p> </a></td>
                 <td><p>{{ projects.startDate }}</p></td>
                 <td><p>{{ projects.endDate }}</p></td>
                 <td><p>{{ projects.location.country }}</p></td>
