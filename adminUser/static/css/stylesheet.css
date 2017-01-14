@@ -5813,7 +5813,18 @@ button.close {
 .navbar .navbar-inner {
     padding: 0;
 }
-
+.btn-link{
+  border:none;
+  outline:none;
+  background:none;
+  cursor:pointer;
+  color:#0000EE;
+  padding:0;
+  text-decoration:underline;
+  font-family:inherit;
+  font-size:inherit;
+    text-align: left;
+}
 
 .table-scroll{
     overflow-y:scroll;

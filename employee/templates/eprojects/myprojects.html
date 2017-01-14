@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ title }}'s Dashboard</title>
+    <title>{{ title }}</title>
 
 
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -24,21 +24,21 @@
           <div>
           <img src="{% static 'img/leidos_logo_2013.jpg' %}" alt="" width="100%" > </a>  </li>
         </h1>
-        
+
       <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
-     
+
     </div>
     <ul class="nav navbar-nav">
-      <li><a href="{% url 'employee:myprojects' %}">My Projects</a></li>
+      <li class="active"><a href="{% url 'employee:myprojects' %}">My Projects</a></li>
       <li><a href="{% url 'employee:projectlist' %}">Projects List</a></li>
     </ul>
   </div>
 </nav>
 
 <div class="panel">
-  <div class="page-title" >{{ title }}'s Profile</div>
+  <div class="page-title" >{{ title }}</div>
 </div>
 
 
@@ -61,93 +61,68 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
 
 
 
-          <div class="col-md-8">
-  <table class="table table-responsive table-hover">
-    <tbody>
-     <tr class="success">
-        <td class="dash">Staff ID: {{ info.staffID }}</td>
-      </tr>
-      <tr class="info">
-        <td class="dash">First Name: {{ title.first_name }}</td>
-          <td class="dash">Last Name: {{ title.last_name }}</td>
-      </tr>
-      <tr class="success">
-          <td class="dash">Nationality: {% get_country info.nationality as country %} {{ country.name }} </td>
-        <td class="dash">Status: {{ info.workStatus }}</td>
-      </tr>
-     <tr class="active">
-          <td class="dash">Date Of Birth: {{ info.dateOfBirth }}</td>
-        <td class="dash">Location: {{ info.preferredLocation.country }}</td>
-      </tr>
-     <tr class="info">
-          <td class="dash">Skill Level: {{ info.skillLevel }}</td>
-      </tr>
-
-    </tbody>
-  </table>
-              <br><br>
- <div class="refresh">
-              <table class="table table-responsive table-full">
-                  <thead class="headTable">
-                  <th class="headText">My On Going Projects</th>
-                  <th class="headText">My Upcoming Projects</th>
-                  <th class="headText">My Completed Projects</th>
-                  </thead>
-    <tbody>
-          <tr class="headTable">
-              <td class="num"><a href="{% url 'employee:currentprojectsget' %}">{{ ongoing }}</a></td>
-              <td class="projectNum"><a href="{% url 'employee:upcomingprojectsget' %}">{{ upcoming.count }}</a></td>
-              <td class="upcoming"><a href="{% url 'employee:completedprojectsget' %}">{{ completed }}</a></td>
-          </tr>
-
-    </tbody>
-  </table>
-          </div>
-
-              <br><br>
-          <h2>My Upcoming Projects</h2>
-                     <div class="input-group pull-right">
+          <div class="col-md-10">
+ <div class="input-group pull-right">
            <span class="input-group-addon">
         <i class="glyphicon glyphicon-search"></i>
     </span>
     <input type="text" class="search form-control" placeholder="Search">
 </div>
 <span class="counter pull-right"></span>
-              <table class="table table-responsive table-hover table-scroll listTable results">
+      <table class="table table-responsive table-bordered listTable results">
+        <thead>
+          <tr>
 
-    <tbody>
-            <tr class="headTable1">
-                <td><h4>Project ID</h4></td>
-                <td><h4>Name</h4></td>
-                <td><h4>Project Manager</h4></td>
-                <td><h4>Start Date</h4></td>
-                <td><h4>End Date</h4></td>
-                <td><h4>Location</h4></td>
-            </tr>
-            {% for projects in upcoming %}
-                <tr class="rowTable">
-                   <td><form action="{% url 'employee:profile' %}" method="post">
+            <th>Project ID</th>
+            <th>Project Name</th>
+              <th>Project Manager</th>
+            <th>Description</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Location</th>
+              <th>Status</th>
+
+          </tr>
+        <tr class="warning no-result">
+      <td colspan="4"><i class="fa fa-warning"></i> No result</td>
+    </tr>
+        </thead>
+        <tbody>
+        {% for projects in list %}
+            <tr>
+                <td><form action="{% url 'employee:myprojects' %}" method="post">
                     {% csrf_token %}
   <button type="submit" name="project"  value="{{ projects.projectID}}" class="btn-link">{{ projects.projectID}}</button>
             </form></td>
-                    <td><p>{{ projects.projectName }}</p></td>
-                 <td><form action="{% url 'employee:profile' %}" method="post">
+            <td>{{ projects.projectName}}</td>
+                 <td><form action="{% url 'employee:myprojects' %}" method="post">
                      {% csrf_token %}
   <button type="submit" name="staff" value="{{ projects.projectManager.staffID}}" class="btn-link">{{ projects.projectManager.user.first_name}} {{ projects.projectManager.user.last_name }}</button>
             </form></td>
-                <td><p>{{ projects.startDate }}</p></td>
-                <td><p>{{ projects.endDate }}</p></td>
-                <td><p>{{ projects.location.country }}</p></td>
+            <td>{{ projects.description}}</td>
+            <td>{{ projects.startDate}}</td>
+            <td>{{ projects.endDate}}</td>
+            <td>{{ projects.location.country}}</td>
+            <td>{{ projects.status}}</td>
+            <td><input type="checkbox" name="selectProject" value="{{ projects.projectID }}"></td>
+            </tr>
 
-                </tr>
+
         {% endfor %}
-    </tbody>
-  </table>
-</div>
+        </tbody>
+      </table>
 
 
+      <br>
+      <br>
+      <grammarly>
+        <div class="_9b5ef6-textarea_btn _9b5ef6-not_focused">
+          <div class="_9b5ef6-transform_wrap">
+            <div class="_9b5ef6-status">
 
-      </div>
+            </div>
+          </div>
+        </div>
       <br>
       <br>
       <grammarly>
