@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^login/', include('accounts.urls')),
     url(r'^admin/', include('adminUser.urls')),
     url(r'^pm/', include('projectManager.urls')),
+    url(r'^employee/', include('employee.urls')),
 ]

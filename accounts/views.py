@@ -22,6 +22,8 @@ def login_user(request):
             return redirect('/admin/dashboard')
         elif(query.designation == 'Project Manager'):
             return redirect('/pm/profile')
+        else:
+            return redirect('/employee/profile')
     return render(request, 'registration/login.html',{"form":form,"title":title})
 
 

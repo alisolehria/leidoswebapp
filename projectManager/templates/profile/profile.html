@@ -107,7 +107,14 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
 
               <br><br>
           <h2>My Upcoming Projects</h2>
-                <table class="table table-responsive table-hover">
+                     <div class="input-group pull-right">
+           <span class="input-group-addon">
+        <i class="glyphicon glyphicon-search"></i>
+    </span>
+    <input type="text" class="search form-control" placeholder="Search">
+</div>
+<span class="counter pull-right"></span>
+              <table class="table table-responsive table-hover table-scroll listTable results">
 
     <tbody>
             <tr class="headTable1">
