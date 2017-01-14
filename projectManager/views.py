@@ -130,7 +130,7 @@ def myprojects_View(request):
         return HttpResponse(status=201)
     #completed projects of specific user
     info = profile.objects.get(staffID=query.staffID)
-    title = "Completed Projects of " + info.user.first_name + " " + info.user.last_name
+    title = "My Projects"
     list = info.projects_set.all()
     return render(request,'projects/myprojects.html',{"list":list,"title":title})
 
