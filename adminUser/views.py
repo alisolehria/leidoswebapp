@@ -328,7 +328,7 @@ def addproject_View(request):
     form = ProjectForm(request.POST or None)
 
     newID = projects.objects.values_list('projectID',flat=True)
-
+    #testing
     if form.is_valid() and request.POST:
         project = form.save(commit=False)
         pm = request.POST.getlist('selectPM')
