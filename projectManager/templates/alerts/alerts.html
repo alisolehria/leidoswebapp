@@ -114,6 +114,30 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
 
  <br>
             {% endif %}
+         {% if alert.alertType == 'Edit Project' %}
+
+                Project: <a target="_blank" href="{% url 'projectManager:projectprofile' alert.project.projectID %}"> {{ alert.project.projectName }}</a> has been edited.
+                <br>
+                 Alert Date: {{ alert.alertDate }}
+               <br>
+             {{ alert.info }}
+             <br>
+               <div class="pull-right">
+                {% for alertStatus in alert.staffalerts_set.all %}
+                   {% if alertStatus.staffID|stringformat:"s" == staff_id and alertStatus.status == 'Unseen'%}
+                        <form action="{% url 'projectManager:alerts' %}" method="post">
+                         {% csrf_token %}
+                     <button class="btn btn-success btn-md" value="{{ alert.alertID }}" name="unseen">Mark as Seen</button>
+                        </form>
+                        <br>
+                       {% endif %}
+
+            {% endfor %}
+
+               </div>
+
+ <br>
+            {% endif %}
 
              {% if alert.alertType == 'Leave' %}
 

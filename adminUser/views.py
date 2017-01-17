@@ -217,6 +217,19 @@ def projectprofile_View(request, project_id):
             staffalert.update(status="Seen")
             messages.success(request, "Project Status Changed")
             return projectlist_View(request)
+        elif "discontinue" in request.POST:
+            id = request.POST.getlist("discontinue")
+            project = projects.objects.filter(projectID=id[0])
+            info = projects.objects.get(projectID=id[0])
+            project.update(status="Discontinued")
+            alert = alerts.objects.create(fromStaff=query, alertType='Project', alertDate=datetime.date.today(),
+                                          project=info)
+            working = info.staffID.all()
+            for staff in working:
+                employee = profile.objects.get(staffID=staff.staffID)
+                staffAlerts.objects.create(alertID=alert, staffID=employee, status="Unseen")
+            messages.success(request, "Project Status Changed")
+            return projectlist_View(request)
 
     return render(request,'project/projectprofile.html',{"info":info,"skillwithhrs":skillwithhrs})
 
@@ -300,7 +313,7 @@ def addskill_View(request, staff_id):
 
     skillset = skills.objects.exclude(staffID=staff_id)
 
-    if(request.POST):
+    if(request.POST and "submitskill" in request.POST):
         skill = request.POST.getlist('skillselec')
         hrs = request.POST.getlist('hours')
         hrs= filter(lambda x: x != "", hrs)
@@ -368,10 +381,15 @@ def addpskill_View(request, project_id):
         hrs = filter(lambda x: x != "", hrs)
         count = len(skill)
         x = 0
+
         while x < count:
             projectsWithSkills.objects.create(projectID_id=project_id, skillID_id=skill[x], hoursRequired=hrs[x])
             x = x + 1
+
         messages.success(request, "Skill added succesfully!")
+        alert = alerts.objects.create(fromStaff=query, alertType='Edit Project', alertDate=datetime.date.today(),
+                                      project=title,info="Added Skills to Project" )
+        staffAlerts.objects.create(alertID=alert, staffID=title.projectManager, status="Unseen")
         if 'continue' in request.POST:
             return addpstaff_View(request, project_id)
         elif 'save' in request.POST:
@@ -403,6 +421,9 @@ def addpstaff_View(request, project_id):
             title.staffID.add(id)
             staffAlerts.objects.create(alertID=alert, staffID=profile.objects.get(staffID=id), status="Unseen")
         messages.success(request, "Staff added succesfully!")
+        alert = alerts.objects.create(fromStaff=query, alertType='Edit Project', alertDate=datetime.date.today(),
+                                      project=title, info="Added Staff to Project")
+        staffAlerts.objects.create(alertID=alert, staffID=title.projectManager, status="Unseen")
         return projectprofile_View(request,project_id)
 
 
@@ -465,7 +486,7 @@ def editprofile_View(request,staff_id):
     form2 = UserProfileForm(request.POST or None, instance=info)
 
     if form.is_valid() and form2.is_valid():
-        #form.save()
+        form.save()
         form2.save()
         messages.success(request, info.user.first_name + " " + info.user.last_name + "'s account edited successfully!")
         return staffprofile_View(request,staff_id)
@@ -599,6 +620,10 @@ def alert_View(request):
             staffalert.update(status="Seen")
             messages.success(request, "Project Status Changed")
             return projectlist_View(request)
+        elif "seen" in request.POST:
+            alertID = request.POST.getlist('seen')
+            alertObj = staffAlerts.objects.filter(Q(alertID=alertID[0]) & Q(staffID=query.staffID))
+            alertObj.update(status="Seen")
 
     return render(request,'common/alerts.html',{"title":title,"alertList":alertList,"staff_id":staff_id})
 

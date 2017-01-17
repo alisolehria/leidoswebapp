@@ -174,8 +174,23 @@ def staffprofile_View(request, staff_id):
 
     title = info.user.first_name + " " + info.user.last_name
 
+    # this part takes skills and skill hours available and puts them in a dict
+    skillset = []
+    skills = info.skills_set.all()
+    skillset = list(skills)
 
-    return render(request,'eprofile/staffprofile.html',{"info":info,"title":title})
+    skillhrset = []
+    skillhrs = info.staffwithskills_set.all()
+    skillhrset = list(skillhrs)
+
+    skillwithhrs = {}
+
+    i = 0
+    while i < len(skillset):
+        skillwithhrs.update({skillset[i]: skillhrset[i]})
+        i = i + 1
+
+    return render(request,'eprofile/staffprofile.html',{"info":info,"title":title, "skillwithhrs":skillwithhrs})
 
 @login_required
 def alert_View(request):

@@ -151,9 +151,11 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
             <br>
   <div class="pull-right">
                 {% if info.projectManager == user %}
+                    {% if info.status == "On Going" or info.status == "Approved"%}
 
                     <a href="{% url 'projectManager:addstaff' info.projectID %}"><input class="btn btn-success btn-md" type="submit" value="Add Staff" id="saveskill" name="continue"/></a>
           {% endif %}
+  {% endif %}
           </div>
 
 <br>

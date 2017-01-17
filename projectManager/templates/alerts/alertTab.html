@@ -34,7 +34,7 @@
                 {% if alertList.count != 0 %}
                     {% for alert in alertList %}
                     <div class="alert alert-info"><a href="{% url 'projectManager:alerts' %}#{{ alert.alertID }}">
-  <strong>{{ alert.alertType }} Alert from {{ alert.fromStaff.user.last_name }}</strong></a>
+  <strong>New Alert from {{ alert.fromStaff.user.last_name }}</strong></a>
 
 </div>
             {% endfor %}
