@@ -88,17 +88,18 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
               <br><br>
  <div class="refresh">
               <table class="table table-responsive table-full">
-                  <thead class="headTable">
+
+
+          <thead>
+              <td class="num"><a href="{% url 'employee:currentprojectsget' %}">{{ ongoing }}</a></td>
+              <td class="projectNum"><a href="{% url 'employee:upcomingprojectsget' %}">{{ upcoming.count }}</a></td>
+              <td class="upcoming"><a href="{% url 'employee:completedprojectsget' %}">{{ completed }}</a></td>
+          </thead>
+                   <thead>
                   <th class="headText">My On Going Projects</th>
                   <th class="headText">My Upcoming Projects</th>
                   <th class="headText">My Completed Projects</th>
                   </thead>
-    <tbody>
-          <tr class="headTable">
-              <td class="num"><a href="{% url 'employee:currentprojectsget' %}">{{ ongoing }}</a></td>
-              <td class="projectNum"><a href="{% url 'employee:upcomingprojectsget' %}">{{ upcoming.count }}</a></td>
-              <td class="upcoming"><a href="{% url 'employee:completedprojectsget' %}">{{ completed }}</a></td>
-          </tr>
 
     </tbody>
   </table>

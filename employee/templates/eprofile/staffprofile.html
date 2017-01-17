@@ -95,8 +95,56 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
 
 
         <br>
-
+ <div class="container">
+  <h3>Skill Level</h3>
+  <div class="progress">
+    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="{{ info.skillLevel }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ info.skillLevel }}%">
+      {{ info.skillLevel }}% Skill Level
+    </div>
+  </div>
+</div>
       <br>
+               <h3>Skills</h3>
+         <div class="input-group pull-right">
+           <span class="input-group-addon">
+        <i class="glyphicon glyphicon-search"></i>
+    </span>
+    <input type="text" class="search form-control" placeholder="Search Skills">
+</div>
+<span class="counter pull-right"></span>
+              <table class="table table-responsive table-bordered listTable results">
+              <thead>
+              <tr>
+                  <th class="success">Skill Name</th>
+                  <th class="success">Hours Available</th>
+
+              </tr>
+                <tr class="warning no-result">
+      <td colspan="4" class="warning"><i class="fa fa-warning"></i> No result</td>
+    </tr>
+              </thead>
+        <tbody>
+
+
+            {% for skills,hrs in skillwithhrs.items  %}
+
+            <tr>
+
+            <td class="danger">{{ skills}}</td>
+
+            <td class = "danger">{{ hrs }}</td>
+
+  {% endfor %}
+
+
+            </tr>
+
+
+
+
+        </tbody>
+      </table>
+        <br>
       <grammarly>
         <div class="_9b5ef6-textarea_btn _9b5ef6-not_focused">
           <div class="_9b5ef6-transform_wrap">

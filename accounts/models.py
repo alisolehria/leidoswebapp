@@ -58,6 +58,12 @@ class projects(models.Model):
     staffID = models.ManyToManyField(profile)
     projectName = models.CharField(max_length=200)
     projectManager = models.ForeignKey('profile',related_name='+')
+    TYPE = (
+        ('Consultancy', 'Consultancy'),
+        ('Development', 'Development'),
+        ('Delivery', 'Delivery'),
+    )
+    type = models.CharField(max_length=30, choices=TYPE)
     location = models.ForeignKey('adminUser.location')
     startDate = models.DateField()
     endDate = models.DateField()
@@ -145,6 +151,8 @@ class alerts(models.Model):
         ('Project', 'Project'),
         ('Leave', 'Leave'),
         ('Staff', 'Staff'),
+        ('Edit Project','Edit Project'),
+        ('Edit Staff','Edit Staff')
     )
     alertType = models.CharField(max_length=30, choices=TYPE)
     alertDate = models.DateField()
@@ -152,6 +160,7 @@ class alerts(models.Model):
     staff = models.ManyToManyField(profile, blank=True,through='staffAlerts')
     project = models.ForeignKey('projects',blank=True,null=True)
     holiday = models.ForeignKey('holidays',blank=True,null=True)
+    info = models.CharField(max_length=500,blank=True,null=True)
 
 
     def __str__(self):

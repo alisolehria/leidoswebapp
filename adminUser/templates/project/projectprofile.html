@@ -76,7 +76,7 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
       </tr>
       <tr>
         <td class="profile">Project Name: {{ info.projectName }}</td>
-          <td class="profile"></td>
+          <td class="profile">Project Type: {{ info.type }}</td>
       </tr>
       <tr>
           <td class="profile"><a class="profileLink" href="{% url 'adminUser:staffprofile' info.projectManager.staffID %}">Project Manager: {{ info.projectManager.user.first_name }} {{ info.projectManager.user.last_name }}</a></td>
@@ -109,6 +109,9 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
                    <form  class = "form-inline" action="{% url 'adminUser:projectprofile' info.projectID %}" method="post">
                      {% csrf_token %}
                    <div class="form-group">
+                   {% if info.status == "On Going" %}
+                         <button class="btn btn-danger btn-md" value="{{ info.projectID }}" name="discontinue"> <span class="glyphicon glyphicon-remove-sign"></span> Discontinue</button>
+                   {% endif %}
                          <a href="{% url 'adminUser:editproject' info.projectID %}" class="btn btn-info btn-md">
           <span class="glyphicon glyphicon-edit"></span> Edit Info
         </a>

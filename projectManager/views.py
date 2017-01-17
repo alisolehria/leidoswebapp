@@ -227,7 +227,7 @@ def addpskill_View(request, project_id):
 
     username = request.user
     query = profile.objects.get(user = username) #get username
-
+    admin = profile.objects.get(staffID = 1)
     if query.designation != "Project Manager":  # check if admin
         return HttpResponse(status=201)
 
@@ -249,6 +249,9 @@ def addpskill_View(request, project_id):
             projectsWithSkills.objects.create(projectID_id=project_id, skillID_id=skill[x], hoursRequired=hrs[x])
             x = x + 1
         messages.success(request, "Skill added succesfully!")
+        alert = alerts.objects.create(fromStaff=query, alertType='Edit Project', alertDate=datetime.date.today(),
+                                      project=title, info="Added Skills to Project")
+        staffAlerts.objects.create(alertID=alert, staffID=admin, status="Unseen")
         if 'continue' in request.POST:
             return addpstaff_View(request, project_id)
         elif 'save' in request.POST:
@@ -261,7 +264,7 @@ def addpstaff_View(request, project_id):
 
     username = request.user
     query = profile.objects.get(user = username) #get username
-
+    admin = profile.objects.get(staffID = 1)
     if query.designation != "Project Manager":  # check if admin
         return HttpResponse(status=201)
 
@@ -284,6 +287,9 @@ def addpstaff_View(request, project_id):
             staffAlerts.objects.create(alertID=alert, staffID=profile.objects.get(staffID=id), status="Unseen")
 
         messages.success(request, "Staff added succesfully!")
+        alert = alerts.objects.create(fromStaff=query, alertType='Edit Project', alertDate=datetime.date.today(),
+                                      project=title, info="Added Staff to Project")
+        staffAlerts.objects.create(alertID=alert, staffID=admin, status="Unseen")
         return projectprofile_View(request,project_id)
 
 

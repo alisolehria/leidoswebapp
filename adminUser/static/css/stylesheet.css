@@ -13,6 +13,8 @@ html {
 body {
     margin: 0;
     background-color: #ae8cc3;
+
+
 }
 article,
 aside,
@@ -5762,31 +5764,31 @@ button.close {
 }
 
 
-.headTable{
-    border: 2px solid black;
-}
+
 
 .headText{
     text-align: center;
+    font-size: 14px;
+    color: #0691ff;
 }
 
 
 .num{
-    background-color: indigo;
+
     font-size: 52px;
     color: white;
     text-align: center;
 }
 
 .projectNum{
-    background-color: #a8541e;
+
     font-size: 52px;
     color: white;
     text-align: center;
 }
 
 .upcoming{
-    background-color: green;
+
     font-size: 52px;
     color: white;
     text-align: center

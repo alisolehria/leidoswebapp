@@ -104,6 +104,7 @@ class ProjectForm(forms.ModelForm):
 
     projectName = forms.CharField(label="Project Name:")
     location = forms.ModelChoiceField(queryset=location.objects.all(),label="Location: ")
+    type = forms.ChoiceField(label="Project Type:",choices=projects.TYPE)
     startDate = forms.DateField(label="Start Date:",
                                   widget=DateTimeWidget(options=dateTimeOptions, bootstrap_version=3))
     endDate = forms.DateField(label="End Date:",
@@ -116,6 +117,7 @@ class ProjectForm(forms.ModelForm):
         fields = [
             'projectName',
             'location',
+            'type',
             'startDate',
             'endDate',
             'description',
@@ -129,7 +131,11 @@ class ProjectForm(forms.ModelForm):
             'Project General Information:',
             Div(
             'projectName',
-            'location'),
+            'location',
+                HTML("""
+                        <br><br><br>
+                    """),
+            'type'),
              HTML("""
                     <br><br><br>
                 """),

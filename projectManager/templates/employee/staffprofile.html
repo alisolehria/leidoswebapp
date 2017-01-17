@@ -103,19 +103,20 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
   </div>
 </div>
         <br>
+          <br>
   <div class="refresh">
               <table class="table table-responsive table-full">
-                  <thead class="headTable">
+
+          <thead>
+              <td class="num"><a href="{% url 'projectManager:currentprojectsget' info.staffID %}">{{ ongoing }}</a></td>
+              <td class="projectNum"><a href="{% url 'projectManager:upcomingprojectsget' info.staffID %}">{{ upcoming }}</a></td>
+              <td class="upcoming"><a href="{% url 'projectManager:completedprojectsget' info.staffID  %}">{{ completed }}</a></td>
+          </thead>
+                    <thead>
                   <th class="headText">On Going Projects</th>
                   <th class="headText">Upcoming Projects</th>
                   <th class="headText">Completed Projects</th>
                   </thead>
-    <tbody>
-          <tr class="headTable">
-              <td class="num"><a href="{% url 'projectManager:currentprojectsget' info.staffID %}">{{ ongoing }}</a></td>
-              <td class="projectNum"><a href="{% url 'projectManager:upcomingprojectsget' info.staffID %}">{{ upcoming }}</a></td>
-              <td class="upcoming"><a href="{% url 'projectManager:completedprojectsget' info.staffID  %}">{{ completed }}</a></td>
-          </tr>
 
     </tbody>
   </table>
