@@ -135,6 +135,11 @@ class holidays(models.Model):
         ('Approved', 'Approved'),
         ('Declined', 'Declined'),
     )
+    TYPE = (
+        ('Sick', 'Sick'),
+        ('Emergency', 'Emergency'),
+        ('Vacation', 'Vacation')
+    )
     status = models.CharField(max_length=30, choices=STATUS)
 
     def __str__(self):

@@ -27,4 +27,5 @@ urlpatterns = [
         url(r'alerts/$', views.alert_View, name='alerts'),
         url(r'alerttab/$', views.alerttab_View, name='alertTab'),
         url(r'projectrequest/$', views.projectrequests_View, name='projectrequest'),
+        url(r'holidays/$', views.holidays, name='holidays')
 ]

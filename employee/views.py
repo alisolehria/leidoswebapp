@@ -217,3 +217,4 @@ def alert_View(request):
             return projectprofile_View(request, project[0])
 
     return render(request,'sideBar/alerts.html',{"title":title,"alertList":alertList,"staff_id":staff_id})
+

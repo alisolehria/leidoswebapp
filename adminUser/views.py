@@ -671,3 +671,4 @@ def projectrequests_View(request):
             return projectlist_View(request)
 
     return render(request,'project/projectrequests.html',{"title":title,"alertList":alertList,"staff_id":staff_id})
+

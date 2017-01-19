@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from accounts.models import profile, location, projects, skills
+from accounts.models import profile, location, projects, skills, holidays
 from .models import location
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Div, HTML
@@ -289,4 +289,68 @@ class UserUpdateForm(forms.ModelForm):
     helper.label_class = 'col-xs-2'
     helper.field_class = 'col-lg-4'
 
+class HolidaysForm(forms.ModelForm):
+    dateTimeOptions = {
+        'format': 'mm/dd/yyyy',
+        'autoclose': True,
+        'minView': 2,
+        'maxView': 4,
+    }
 
+    startDate = forms.DateField(label="Start Date:",
+                                widget=DateTimeWidget(options=dateTimeOptions, bootstrap_version=3))
+    endDate = forms.DateField(label="End Date:",
+                              widget=DateTimeWidget(options=dateTimeOptions, bootstrap_version=3))
+    type = forms.ChoiceField(label="Project Type:", choices=holidays.TYPE)
+    description = forms.CharField(widget=forms.Textarea,label="Description:")
+
+    class Meta:
+        model = holidays
+        fields = [
+            'type',
+            'startDate',
+            'endDate',
+            'description',
+        ]
+
+    helper = FormHelper()
+    helper.layout = Layout(
+        Fieldset(
+            'Vacation Dates:',
+            Div('startDate',
+                'endDate'),
+            HTML("""
+                        <br><br><br>
+                    """),
+        ),
+        Fieldset(
+            'Vacation Type:',
+            'type',
+            HTML("""
+                            <br><br><br>
+                        """),
+        ),
+        Fieldset(
+            'Vacation Reason:',
+            'description',
+            HTML("""
+                        <br><br><br>
+                    """),
+        ),
+    )
+
+    def clean(self, *args, **kwargs):
+        startDate = self.cleaned_data.get('startDate')
+        endDate = self.cleaned_data.get('endDate')
+        if startDate > endDate:
+            raise forms.ValidationError('Start Date Cannot Precede End Date')
+        if startDate == datetime.date.today():
+            raise forms.ValidationError('Cannot Start Holiday From Today')
+#        if startDate == endDate:
+#            raise forms.ValidationError('The Dates have Already Been Chosen, Please Try Again')
+        return super(HolidaysForm, self).clean(*args, **kwargs)
+
+    helper.form_tag = False
+    helper.form_class = 'form-horizontal'
+    helper.label_class = 'col-xs-2'
+    helper.field_class = 'col-lg-4'
