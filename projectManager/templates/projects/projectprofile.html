@@ -36,11 +36,11 @@
         <li><a href="{% url 'adminUser:projectlist' %}">Matchmaking</a></li>
     </ul>
   </div>
+            <div class="container-heading">
+             {{ info.projectName }}
+          </div>
 </nav>
 
-<div class="panel">
-  <div class="page-title" >{{ info.projectName }}</div>
-</div>
  {% if messages %}
         <div class = "row">
       <div class="col-sm-6 col-sm-offset-3">

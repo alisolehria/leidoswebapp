@@ -33,11 +33,13 @@
         <li><a href="{% url 'adminUser:projectlist' %}">Matchmaking</a></li>
     </ul>
   </div>
+           <div class="container-heading">
+              {{ title }}
+          </div>
 </nav>
+
 </div>
-<div class="panel panel-default">
-  <div class="panel-top page-title">{{ title }}</div>
-</div>
+
 
     {% if messages %}
         <div class = "row">
@@ -126,7 +128,7 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
             {% endif %}
             {% if alert.alertType == 'Edit Project' %}
 
-                 Project: <a target="_blank" href="{% url 'projectManager:projectprofile' alert.project.projectID %}"> {{ alert.project.projectName }}</a> has been edited.
+                 Project: <a target="_blank" href="{% url 'adminUser:projectprofile' alert.project.projectID %}"> {{ alert.project.projectName }}</a> has been edited.
                 <br>
                  Alert Date: {{ alert.alertDate }}
                <br>

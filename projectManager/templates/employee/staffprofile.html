@@ -36,11 +36,11 @@
         <li><a href="{% url 'adminUser:projectlist' %}">Matchmaking</a></li>
     </ul>
   </div>
+          <div class="container-heading">
+              {{ info.user.first_name }} {{ info.user.last_name }}
+          </div>
 </nav>
 
-<div class="panel">
-  <div class="page-title" >{{ info.user.first_name }} {{ info.user.last_name }}</div>
-</div>
 
 
    <div class="container-fluid">
