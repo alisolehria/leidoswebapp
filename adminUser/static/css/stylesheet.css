@@ -15,6 +15,7 @@ body {
     background-color: #ae8cc3;
 
 
+
 }
 article,
 aside,
@@ -5815,6 +5816,13 @@ button.close {
 .navbar .navbar-inner {
     padding: 0;
 }
+.container-footer {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: #00274e;
+}
 .btn-link{
   border:none;
   outline:none;
@@ -5833,6 +5841,12 @@ button.close {
     height:300px;
     display: block;
 
+
+}
+
+.footer{
+    background-color: #1b6d85;
+    width:100%;
 
 }
 .login-form {
@@ -5929,6 +5943,21 @@ h7{
  box-shadow: 0 0 5px rgba(1, 1, 1, 0.7);
  background-color: #38537e;
  width: auto;
+}
+
+h8{
+    font-family: Cambria;
+    color: white;
+    font-size: 18px;
+}
+.img-footer{
+    width: 150px;
+    height: 100px;
+}
+
+.img-footer-syntax{
+    width: 100px;
+    height: 100px;
 }
 
 .btn-new{
