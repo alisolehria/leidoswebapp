@@ -676,7 +676,6 @@ def projectrequests_View(request):
 
     return render(request,'project/projectrequests.html',{"title":title,"alertList":alertList,"staff_id":staff_id})
 
-
 def report_View(request,project_id):
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
