@@ -5830,10 +5830,52 @@ button.close {
 
 .table-scroll{
     overflow-y:scroll;
-    height:500px;
+    height:300px;
     display: block;
 
 
+}
+.login-form {
+  width: 350px;
+  padding: 40px 30px;
+  background: #eee;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  margin: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.log-btn {
+  background: black;
+  dispaly: inline-block;
+  width: 100%;
+  font-size: 16px;
+  height: 50px;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.link {
+  text-decoration: none;
+  color: #C6C6C6;
+  float: right;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+.link:hover {
+  text-decoration: underline;
+  color: #8C918F;
 }
 
 .navbar .nav li {

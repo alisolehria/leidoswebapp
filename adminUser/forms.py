@@ -151,9 +151,11 @@ class ProjectForm(forms.ModelForm):
         Fieldset(
             'Project Description:',
             'description',
+
              HTML("""
                     <br><br><br>
-                """),
+                """)
+
         ),
         Fieldset(
             'Numbers:',
