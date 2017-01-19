@@ -66,9 +66,9 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
     <input type="text" class="search form-control" placeholder="Search">
 </div>
 <span class="counter pull-right"></span>
-    <form action="" method="POST">
+
     {% csrf_token %}
-      <table class="table table-responsive table-bordered listTable results">
+      <table class="table table-responsive table-bordered listTable results" id="list">
         <thead>
           <tr>
             
@@ -95,7 +95,7 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
             <td>{{ staff.designation }}</td>
             <td>{{ staff.workStatus }}</td>
             <td>{{ staff.skillLevel }}</td>
-            <td><input type="checkbox" name="selectStaff" value="{{ staff.staffID }}" id="{{ staff.staffID }}"></td>
+            <td><input type="checkbox" name="option{{ staff.staffID }}" value="{{ staff.staffID }}" id="{{ staff.staffID }}"></td>
             </tr>
 
 
@@ -103,9 +103,22 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
 
         </tbody>
       </table>
+
 <br>
-         <input class="btn btn-primary btn-md pull-right" type="submit" value="Open Profile" />
-        </form>
+    <div id="checkbox_list">
+        <button onclick="opentabs('checkbox_list')" class="btn btn-primary btn-md pull-right">Open Profile(s)</button>
+    </div>
+<script>
+    function opentabs(divid) {
+        var checks = document.querySelectorAll('#' + divid + ' input[type="checkbox"]');
+        for (var i = 0; i < checks.length; i++) {
+            var check = checks[i];
+            if (check.checked == true) {
+
+            }
+        }
+    }
+    </script>
         <br>
         <br>
       <br>
@@ -122,12 +135,49 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
     </div>
 
   </div>
-          <div class="panel panel-default">
-  <div class="panel-bottom" style="background-color:#000854;" ><center><font size="5" color="#4c5def">Developed By SYNTAX </font> </center></div>
 
 </div>
-</div>
+<div class="container-footer">
+    <br><br>
+    <div class="row">
+        <div class="col-sm-2">
 
+    <img src={% static 'img/leidos.png' %} alt="leidosLogo" class="img-rounded img-responsive img-footer">
+
+</div>
+        <div class="col-sm-2">
+
+    <h8>Leidos Inc.
+        <br>
+        2017 Leidos inc.©
+        <br>
+     Reston, Virginia
+</h8>
+              </div>
+
+
+  <div class="col-sm-2 pull-right">
+
+    <img src={% static 'img/Logo.jpg' %} alt="syntaxLogo" class="img-rounded img-responsive img-footer-syntax">
+
+</div>
+         <div class="col-sm-2 pull-right">
+
+    <h8>Developed By Syntax Inc.©
+        <br>
+        Dubai, United Arab Emirates
+        <br>
+
+</h8>
+              </div>
+
+        </div>
+
+             <br><br>
+
+
+
+</div>
 
 
 </body>

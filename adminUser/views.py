@@ -9,6 +9,10 @@ from .forms import UserForm,UserProfileForm,ProjectForm, SkillForm, LocationForm
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.db.models import Q
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import Image
+import os.path
 
 
 @login_required
@@ -672,3 +676,29 @@ def projectrequests_View(request):
 
     return render(request,'project/projectrequests.html',{"title":title,"alertList":alertList,"staff_id":staff_id})
 
+def report_View(request,project_id):
+    # Create the HttpResponse object with the appropriate PDF headers.
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="test.pdf"'
+    query = projects.objects.get(projectID=project_id)
+
+    # Create the PDF ob ject, using the response object as its "file."
+    p = canvas.Canvas(response)
+    fn = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img/leidos_logo_2013.jpg')
+    p.drawImage(fn,0,720,width=800,height=200)
+
+    p.showPage()
+
+    # Draw things on the PDF. Here's where the PDF generation happens.
+    # See the ReportLab documentation for the full list of functionality.
+    p.drawString(20, 780, "Project ID: "+str(query.projectID))
+    p.drawString(20, 760, "Project Name: "+query.projectName)
+    p.drawString(20, 740, "Project Manager: "+query.projectManager.user.first_name+" "+query.projectManager.user.last_name)
+    p.drawString(20, 720, "Project Type: "+query.type)
+
+
+
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+    return response
