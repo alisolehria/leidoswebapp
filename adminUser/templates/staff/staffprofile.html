@@ -74,7 +74,7 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
     <tbody>
      <tr>
         <td class="profile">Staff ID: {{ info.staffID }}</td>
-         <td class="profile">Staff ID: {{ info.user.email }}</td>
+         <td class="profile">Email: {{ info.user.email }}</td>
       </tr>
       <tr>
         <td class="profile">First Name: {{ info.user.first_name }}</td>
@@ -91,6 +91,11 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
      <tr>
         <td class="profile">Preferred Country: {{ info.preferredLocation.country }}</td>
          <td class="profile">Preferred City: {{ info.preferredLocation.city }}</td>
+      </tr>
+    <tr>
+        <td class="profile">Last Login: {{ info.user.last_login }}</td>
+        <td></td>
+
       </tr>
 
     </tbody>

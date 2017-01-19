@@ -105,7 +105,7 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
 <br>
    <br>
            <div class="pull-right">
-
+               <a href="{% url 'adminUser:report' info.projectID %}">Click Me</a>
                    <form  class = "form-inline" action="{% url 'adminUser:projectprofile' info.projectID %}" method="post">
                      {% csrf_token %}
                    <div class="form-group">
