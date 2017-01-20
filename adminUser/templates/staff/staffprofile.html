@@ -32,11 +32,13 @@
         <li><a href="{% url 'adminUser:projectlist' %}">Matchmaking</a></li>
     </ul>
   </div>
+
+           <div class="container-heading">
+           {{ info.user.first_name }} {{ info.user.last_name }}
+          </div>
 </nav>
 </div>
-<div class="panel panel-default">
-  <div class="panel-top page-title">{{ info.user.first_name }} {{ info.user.last_name }}</div>
-</div>
+
 
 
  {% if messages %}
@@ -219,7 +221,13 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
               </div>
 
 
+
   <div class="col-sm-2 pull-right">
+
+
+
+  <div class="col-sm-2 pull-right">
+
 
     <img src={% static 'img/Logo.jpg' %} alt="syntaxLogo" class="img-rounded img-responsive img-footer-syntax">
 

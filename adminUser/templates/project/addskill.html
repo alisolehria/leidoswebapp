@@ -34,12 +34,13 @@
         <li><a href="{% url 'adminUser:projectlist' %}">Matchmaking</a></li>
     </ul>
   </div>
+           <div class="container-heading">
+             Add Skill for project: {{ title }}
+          </div>
 </nav>
 
 
-<div class="panel panel-default">
-  <div class="panel-top page-title">Add Skill for project: {{ title }}</div>
-</div>
+
       </div>
     {% if messages %}
         <div class = "row">
@@ -181,6 +182,7 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
 
     <img src={% static 'img/leidos.png' %} alt="leidosLogo" class="img-rounded img-responsive img-footer">
 
+
 </div>
         <div class="col-sm-2">
 
@@ -199,6 +201,27 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
 
 </div>
          <div class="col-sm-2 pull-right">
+
+
+</div>
+        <div class="col-sm-2">
+
+    <h8>Leidos Inc.
+        <br>
+        2017 Leidos inc.©
+        <br>
+     Reston, Virginia
+</h8>
+              </div>
+
+
+  <div class="col-sm-2 pull-right">
+
+    <img src={% static 'img/Logo.jpg' %} alt="syntaxLogo" class="img-rounded img-responsive img-footer-syntax">
+
+</div>
+         <div class="col-sm-2 pull-right">
+
 
     <h8>Developed By Syntax Inc.©
         <br>
