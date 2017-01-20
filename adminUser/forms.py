@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from accounts.models import profile, location, projects, skills, holidays
 from .models import location
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Div, HTML
+from crispy_forms.layout import Layout, Fieldset, Div, HTML, Field
 from datetimewidget.widgets import DateTimeWidget
 from django_countries.fields import LazyTypedChoiceField, countries
 import datetime
@@ -152,20 +152,21 @@ class ProjectForm(forms.ModelForm):
             'Project Description:',
             'description',
 
-             HTML("""
-                    <br><br><br>
-                """)
-
-        ),
-        Fieldset(
-            'Numbers:',
              Div('budget',
+                 HTML("""
+                       <br><br><br>
+                   """),
             'numberOfStaff'),
              HTML("""
                     <br><br><br>
-                """),
+                """)
         ),
         Fieldset(
+            '  '
+        ),
+
+        Fieldset(
+
             'Project Manager for the Project:',
 
          )

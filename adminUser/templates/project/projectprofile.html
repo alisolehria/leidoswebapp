@@ -107,10 +107,12 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
 <br>
    <br>
            <div class="pull-right">
-               <a href="{% url 'adminUser:report' info.projectID %}">Click Me</a>
+
                    <form  class = "form-inline" action="{% url 'adminUser:projectprofile' info.projectID %}" method="post">
                      {% csrf_token %}
                    <div class="form-group">
+                    <a href="{% url 'adminUser:report' info.projectID %}"><img src={% static 'img/pdf.png' %} alt="pdf"></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
                    {% if info.status == "On Going" %}
                          <button class="btn btn-danger btn-md" value="{{ info.projectID }}" name="discontinue"> <span class="glyphicon glyphicon-remove-sign"></span> Discontinue</button>
                    {% endif %}
