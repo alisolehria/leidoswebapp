@@ -5945,6 +5945,21 @@ h7{
  width: auto;
 }
 
+
+h8{
+    font-family: Cambria;
+    color: white;
+    font-size: 18px;
+}
+.img-footer{
+    width: 150px;
+    height: 100px;
+}
+
+.img-footer-syntax{
+    width: 100px;
+    height: 100px;
+
 .container-heading{
    background-color: #00274e;
      border-radius: 10px;
@@ -5968,6 +5983,7 @@ h8{
 .img-footer-syntax{
     width: 80px;
     height: 80px;
+
 }
 
 .btn-new{
