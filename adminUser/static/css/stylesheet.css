@@ -5779,6 +5779,7 @@ button.close {
     font-size: 52px;
     color: white;
     text-align: center;
+
 }
 
 .projectNum{
@@ -5966,7 +5967,7 @@ h8{
  box-shadow: 0 0 5px rgba(1, 1, 1, 0.7);
     color: white;
     font-family: "Leelawadee UI";
-    font-size: 28px;
+    font-size: 24px;
     text-align: center;
 }
 

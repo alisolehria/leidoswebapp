@@ -28,5 +28,4 @@ urlpatterns = [
         url(r'alerttab/$', views.alerttab_View, name='alertTab'),
         url(r'projectrequest/$', views.projectrequests_View, name='projectrequest'),
         url(r'report/(?P<project_id>[0-9]+)/$', views.report_View, name='report'),
-        url(r'holidays/$', views.holidays, name='holidays')
 ]
