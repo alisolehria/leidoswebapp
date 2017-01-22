@@ -37,14 +37,24 @@ def profile_View(request):
     upcoming = info.projects_set.filter(status="Approved")
     completed = info.projects_set.filter(status="Completed").count()
 
-    if request.POST:
-        if 'project' in request.POST:
-            project = request.POST.getlist('project')
-            return projectprofile_View(request, project[0])
-        elif 'staff' in request.POST:
-            staff = request.POST.getlist('staff')
-            return staffprofile_View(request, staff[0])
-    return render(request, 'eprofile/profile.html',{"title":username,"info":query,"ongoing":ongoing,"upcoming":upcoming,"completed":completed})
+    # this part takes skills and skill hours available and puts them in a dict
+    skillset = []
+    skills = info.skills_set.all()
+    skillset = list(skills)
+
+    skillhrset = []
+    skillhrs = info.staffwithskills_set.all()
+    skillhrset = list(skillhrs)
+
+    skillwithhrs = {}
+
+    i = 0
+    while i < len(skillset):
+        skillwithhrs.update({skillset[i]: skillhrset[i]})
+        i = i + 1
+
+
+    return render(request, 'eprofile/profile.html',{"title":username,"info":query,"ongoing":ongoing,"upcoming":upcoming,"completed":completed,"skillwithhrs":skillwithhrs})
 
 @login_required()
 def myprojects_View(request):
@@ -75,7 +85,7 @@ def projectlist_View(request):
         return HttpResponse(status=201)
 
     title = "Projects List"
-    list = projects.objects.filter(status="Approved") #get all the objects from profile table
+    list = projects.objects.filter(status="Approved")#get all the objects from profile table which have been approved
 
     if request.POST:
         if 'project' in request.POST:
@@ -127,36 +137,42 @@ def completedprojectsget_View(request):
     return render(request,'eprojects/projectlist.html',{"list":list,"title":title})
 
 @login_required()
-def projectprofile_View(request, project_id):
+def projectprofile_View(request, project_id=None):
 
     username = request.user
     query = profile.objects.get(user=username)  # get username
     if query.designation != "Employee":  # check if admin
         return HttpResponse(status=201)
 
-    info = projects.objects.get(projectID=project_id)
+    if project_id is not None:
+        info = projects.objects.get(projectID=project_id)
     # this part takes skills and skill hours req. and puts them in a dict
-    skillset = []
-    skills = info.skills_set.all()
-    skillset = list(skills)
+        skillset = []
+        skills = info.skills_set.all()
+        skillset = list(skills)
 
-    skillhrset = []
-    skillhrs = info.projectswithskills_set.all()
-    skillhrset = list(skillhrs)
+        skillhrset = []
+        skillhrs = info.projectswithskills_set.all()
+        skillhrset = list(skillhrs)
 
-    skillwithhrs = {}
+        skillwithhrs = {}
 
-    i = 0
-    while i < len(skillset):
-        skillwithhrs.update({skillset[i]: skillhrset[i]})
-        i = i + 1
+        i = 0
+        while i < len(skillset):
+            skillwithhrs.update({skillset[i]: skillhrset[i]})
+            i = i + 1
+        title = info.projectName
 
-    if request.POST and 'staff' in request.POST:
-        staff = request.POST.getlist('staff')
-        print(staff)
-        return staffprofile_View(request, staff[0])
+    if request.POST and 'staffNum' in request.POST:
+        staff = request.POST.getlist('staffNum')
+        project = request.POST.getlist('projectNum')
+        proj = projects.objects.get(projectID=project[0])
+        alert = alerts.objects.create(fromStaff=query, alertType='Project Request', alertDate=datetime.date.today(),project=proj)
+        staffAlerts.objects.create(alertID=alert, staffID=proj.projectManager, status="Unseen")
+        messages.success(request,"Project Request Successfull!")
+        return projectlist_View(request)
 
-    title = info.projectName
+
     return render(request, 'eprojects/projectprofile.html', {"info":info, "skillwithhrs":skillwithhrs,'user':query,"title":title})
 
 @login_required()

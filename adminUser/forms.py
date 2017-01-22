@@ -345,6 +345,7 @@ class HolidaysForm(forms.ModelForm):
     def clean(self, *args, **kwargs):
         startDate = self.cleaned_data.get('startDate')
         endDate = self.cleaned_data.get('endDate')
+
         if startDate > endDate:
             raise forms.ValidationError('Start Date Cannot Precede End Date')
         if startDate == datetime.date.today():

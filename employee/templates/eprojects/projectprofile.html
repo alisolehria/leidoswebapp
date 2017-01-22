@@ -95,11 +95,15 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
   </table>
         </div>
 <br>
-{% if user not in info.staffID.all %}
+{% if user not in info.staffID.all and info.numberOfStaff > info.staffID.count %}
             <div class="pull-right">
-             <button type="button" class="btn btn-success btn-md">
+            <form action="{% url 'employee:projectprofile' %}" method="post">
+                {% csrf_token %}
+                <input type="number" name="projectNum" value="{{ info.projectID }}" hidden />
+             <button class="btn btn-success btn-md" name="staffNum" value="{{ user.staffID }}">
           <span class="glyphicon glyphicon-plus-sign"></span> Apply
         </button>
+</form>
           </div>
           {% endif %}
 <br>

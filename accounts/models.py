@@ -157,7 +157,8 @@ class alerts(models.Model):
         ('Leave', 'Leave'),
         ('Staff', 'Staff'),
         ('Edit Project','Edit Project'),
-        ('Edit Staff','Edit Staff')
+        ('Edit Staff','Edit Staff'),
+        ('Project Request','Project Request')
     )
     alertType = models.CharField(max_length=30, choices=TYPE)
     alertDate = models.DateField()

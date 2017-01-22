@@ -147,6 +147,60 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
                         </form>
                         <br>
                        {% endif %}
+                    {% endfor %}
+
+    </div>
+         {% endif %}
+
+                     {% if alert.alertType == 'Edit Staff' %}
+
+                {{ alert.info }}
+                <br>
+                 Alert Date: {{ alert.alertDate }}
+               <br>
+
+
+
+               <div class="pull-right">
+                {% for alertStatus in alert.staffalerts_set.all %}
+                   {% if alertStatus.staffID|stringformat:"s" == staff_id and alertStatus.status == 'Unseen'%}
+                        <form action="{% url 'employee:alerts' %}" method="post">
+                         {% csrf_token %}
+                       <button class="btn btn-success btn-md" value="{{ alert.alertID }}" name="unseen">Mark as Seen</button>
+                        </form>
+                        <br>
+                       {% endif %}
+            {% endfor %}
+
+               </div>
+            <br>
+
+            {% endif %}
+         {% if alert.alertType == 'Project Request' %}
+
+                   <form class="form-inline" action="{% url 'employee:alerts' %}" method="post">
+             <div class="form-group">
+                Your Request to join Project:
+                    {% csrf_token %}
+  <button type="submit" name="project"  value="{{ alert.project.projectID}}" class="btn-link">{{ alert.project.projectName }}</button>
+            </form>
+             has been declined.
+                  </div>
+                <br>
+                 Alert Date: {{ alert.alertDate }}
+               <br>
+
+
+
+               <div class="pull-right">
+                {% for alertStatus in alert.staffalerts_set.all %}
+                   {% if alertStatus.staffID|stringformat:"s" == staff_id and alertStatus.status == 'Unseen'%}
+                        <form action="{% url 'employee:alerts' %}" method="post">
+                         {% csrf_token %}
+                       <button class="btn btn-success btn-md" value="{{ alert.alertID }}" name="unseen">Mark as Seen</button>
+                        </form>
+                        <br>
+                       {% endif %}
             {% endfor %}
 
                </div>
