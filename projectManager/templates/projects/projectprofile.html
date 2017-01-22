@@ -84,7 +84,7 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
       </tr>
       <tr>
           <td class="profile"><a class="profileLink" href="{% url 'projectManager:staffprofile' info.projectManager.staffID %}">Project Manager: {{ info.projectManager.user.first_name }} {{ info.projectManager.user.last_name }}</a></td>
-        <td class="profile"></td>
+        <td class="profile">Maximum Staff: {{ info.numberOfStaff }}</td>
       </tr>
       <tr>
           <td class="profile">Start Date: {{ info.startDate}}</td>
@@ -104,8 +104,17 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
   </table>
         </div>
 <br>
-
-
+          <div class="pull-right">
+  <form  class = "form-inline" action="{% url 'projectManager:projectprofile' info.projectID %}" method="post">
+  {% csrf_token %}
+                        <div class="form-group">
+{% if info.status == "On Going" %}
+     <button class="btn btn-success btn-md" value="{{ info.projectID }}" name="complete"> <span class="glyphicon glyphicon-thumbs-up"></span> Complete</button>
+                            {% endif %}
+                        </div>
+                    </form>
+          </div>
+          <br>
     <h3>Staff Working on this Project</h3>
      <div class="input-group pull-right">
            <span class="input-group-addon">
@@ -151,10 +160,12 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
             <br>
   <div class="pull-right">
                 {% if info.projectManager == user %}
-                    {% if info.status == "On Going" or info.status == "Approved"%}
+
+                        {% if info.status == "On Going" or info.status == "Approved"%}
 
                     <a href="{% url 'projectManager:addstaff' info.projectID %}"><input class="btn btn-success btn-md" type="submit" value="Add Staff" id="saveskill" name="continue"/></a>
           {% endif %}
+
   {% endif %}
           </div>
 
@@ -195,8 +206,9 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
         <br>
           <div class="pull-right">
                 {% if info.projectManager == user %}
-
+                     {% if info.status == "On Going" or info.status == "Approved"%}
                     <a href="{% url 'projectManager:addskill' info.projectID %}"><input class="btn btn-success btn-md" type="submit" value="Add Skill" id="saveskill" name="continue"/></a>
+          {% endif %}
           {% endif %}
           </div>
 

@@ -37,8 +37,23 @@ def profile_View(request):
     upcoming = info.projects_set.filter(status="Approved")
     completed = info.projects_set.filter(status="Completed").count()
 
+    # this part takes skills and skill hours available and puts them in a dict
+    skillset = []
+    skills = info.skills_set.all()
+    skillset = list(skills)
 
-    return render(request, 'profile/profile.html',{"title":username,"info":query,"ongoing":ongoing,"upcoming":upcoming,"completed":completed})
+    skillhrset = []
+    skillhrs = info.staffwithskills_set.all()
+    skillhrset = list(skillhrs)
+
+    skillwithhrs = {}
+
+    i = 0
+    while i < len(skillset):
+        skillwithhrs.update({skillset[i]: skillhrset[i]})
+        i = i + 1
+
+    return render(request, 'profile/profile.html',{"title":username,"info":query,"ongoing":ongoing,"upcoming":upcoming,"completed":completed,"skillwithhrs":skillwithhrs})
 
 @login_required()
 def upcomingprojectsget_View(request, staff_id):
@@ -117,7 +132,22 @@ def projectprofile_View(request, project_id):
         skillwithhrs.update({skillset[i]: skillhrset[i]})
         i = i + 1
 
+    if request.POST and 'complete' in request.POST:
+        id = request.POST.getlist("complete")
+        project = projects.objects.filter(projectID=id[0])
+        info = projects.objects.get(projectID=id[0])
+        project.update(status="Completed")
+        alert = alerts.objects.create(fromStaff=query, alertType='Project', alertDate=datetime.date.today(),
+                                      project=info, info="Project")
+        working = info.staffID.all()
+        for staff in working:
+            employee = profile.objects.get(staffID=staff.staffID)
+            staffAlerts.objects.create(alertID=alert, staffID=employee, status="Unseen")
 
+        alertAdmin = alerts.objects.create(fromStaff=query, alertType='Staff', alertDate=datetime.date.today(),project=info)
+        staffAlerts.objects.create(alertID=alertAdmin, staffID=profile.objects.get(staffID = 1), status="Unseen")
+        messages.success(request, "Project Status Changed")
+        return projectlist_View(request)
 
     return render(request, 'projects/projectprofile.html', {"info":info, "skillwithhrs":skillwithhrs,'user':query})
 
@@ -185,10 +215,38 @@ def alert_View(request):
     staff_id = str(query.staffID)
 
     if request.POST:
-        alertID = request.POST.getlist('unseen')
-        alertObj = staffAlerts.objects.filter(Q(alertID=alertID[0])&Q(staffID=query.staffID))
-        alertObj.update(status="Seen")
-
+        if "unseen" in request.POST:
+            alertID = request.POST.getlist('unseen')
+            alertObj = staffAlerts.objects.filter(Q(alertID=alertID[0])&Q(staffID=query.staffID))
+            alertObj.update(status="Seen")
+        elif "accept" in request.POST:
+            staffID = request.POST.getlist("accept")
+            alertID = request.POST.getlist('seen')
+            alertObj = staffAlerts.objects.filter(Q(alertID=alertID[0]) & Q(staffID=query.staffID))
+            alertObj.update(status="Seen")
+            project = request.POST.getlist("projectNum")
+            proj = projects.objects.get(projectID=project[0])
+            alert = alerts.objects.create(fromStaff=query, alertType='Staff', alertDate=datetime.date.today(),
+                                          project=proj)
+            proj.staffID.add(staffID[0])
+            staff = profile.objects.get(staffID=staffID[0])
+            staffAlerts.objects.create(alertID=alert, staffID=staff, status="Unseen")
+            messages.success(request,staff.user.first_name+" "+staff.user.last_name+" Added Succesfully to "+alert.project.projectName )
+            return projectprofile_View(request,project[0])
+        elif "reject" in request.POST:
+            staffID = request.POST.getlist("reject")
+            alertID = request.POST.getlist('seen')
+            alertObj = staffAlerts.objects.filter(Q(alertID=alertID[0]) & Q(staffID=query.staffID))
+            alertObj.update(status="Seen")
+            project = request.POST.getlist("projectNum")
+            proj = projects.objects.get(projectID=project[0])
+            alert = alerts.objects.create(fromStaff=query, alertType='Project Request', alertDate=datetime.date.today(),
+                                         project=proj )
+            staff = profile.objects.get(staffID=staffID[0])
+            staffAlerts.objects.create(alertID=alert, staffID=staff, status="Unseen")
+            messages.success(request,
+                             staff.user.first_name + " " + staff.user.last_name + "'s Request to join " +alert.project.projectName+" Declined")
+            return projectprofile_View(request,project[0])
     return render(request,'alerts/alerts.html',{"title":title,"alertList":alertList,"staff_id":staff_id})
 
 @login_required

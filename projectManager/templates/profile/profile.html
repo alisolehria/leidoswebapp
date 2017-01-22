@@ -107,38 +107,46 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
           </div>
 
               <br><br>
-          <h2>My Upcoming Projects</h2>
+          <h2>My Skills</h2>
                      <div class="input-group pull-right">
            <span class="input-group-addon">
         <i class="glyphicon glyphicon-search"></i>
     </span>
-    <input type="text" class="search form-control" placeholder="Search">
+    <input type="text" class="search form-control" placeholder="Search Skills">
 </div>
 <span class="counter pull-right"></span>
-              <table class="table table-responsive table-hover table-scroll listTable results">
+             <table class="table table-responsive table-bordered listTable results">
+              <thead>
+              <tr>
+                  <th class="success">Skill Name</th>
+                  <th class="success">Hours Available</th>
 
-    <tbody>
-            <tr class="headTable1">
-                <td><h4>Project ID</h4></td>
-                <td><h4>Name</h4></td>
-                <td><h4>Project Manager</h4></td>
-                <td><h4>Start Date</h4></td>
-                <td><h4>End Date</h4></td>
-                <td><h4>Location</h4></td>
+              </tr>
+                <tr class="warning no-result">
+      <td colspan="4" class="warning"><i class="fa fa-warning"></i> No result</td>
+    </tr>
+              </thead>
+        <tbody>
+
+
+            {% for skills,hrs in skillwithhrs.items  %}
+
+            <tr>
+
+            <td class="danger">{{ skills}}</td>
+
+            <td class = "danger">{{ hrs }}</td>
+
+  {% endfor %}
+
+
             </tr>
-            {% for projects in upcoming %}
-                <tr class="rowTable">
-                    <td><p><a href="{% url 'projectManager:projectprofile' projects.projectID %}">{{ projects.projectID }}</a></p></td>
-                    <td><p>{{ projects.projectName }}</p></td>
-                <td><p><a href="{% url 'projectManager:staffprofile' projects.projectManager.staffID %}">{{ projects.projectManager.user.first_name}} {{ projects.projectManager.user.last_name}} </p> </a></td>
-                <td><p>{{ projects.startDate }}</p></td>
-                <td><p>{{ projects.endDate }}</p></td>
-                <td><p>{{ projects.location.country }}</p></td>
 
-                </tr>
-        {% endfor %}
-    </tbody>
-  </table>
+
+
+
+        </tbody>
+      </table>
 </div>
 
 

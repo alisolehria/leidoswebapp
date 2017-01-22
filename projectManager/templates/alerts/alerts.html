@@ -68,7 +68,7 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
            {% if alert.alertType == 'Project' %}
 
 
-               Your Project Request:  <a target="_blank" href="{% url 'projectManager:projectprofile' alert.project.projectID %}">Project Name: {{ alert.project.projectName }}</a> Status Changed
+               {{ alert.info }}: <a target="_blank" href="{% url 'projectManager:projectprofile' alert.project.projectID %}"> {{ alert.project.projectName }}</a> Status Changed
                <br>
                Alert Date: {{ alert.alertDate }}
                <br>
@@ -155,6 +155,32 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
                    {% if alertStatus.staffID|stringformat:"s" == staff_id and alertStatus.status == 'Unseen'%}
                         <form action="{% url 'projectManager:alerts' %}" method="post">
                          {% csrf_token %}
+                            <input type="number" value="{{ alert.project.projectID }}" name = "ProjectNum" hidden>
+                             <button class="btn btn-danger btn-md" value="{{ alert.fromStaff.staffID}}" name="reject"> <span class="glyphicon glyphicon-thumbs-down"></span> Decline</button>
+              <button class="btn btn-success btn-md" value="{{ alert.fromStaff.staffID}}" name="accept"> <span class="glyphicon glyphicon-thumbs-up"></span> Approve</button>
+                        </form>
+                        <br>
+                       {% endif %}
+            {% endfor %}
+
+               </div>
+            <br>
+
+            {% endif %}
+     {% if alert.alertType == 'Edit Staff' %}
+
+                {{ alert.info }}
+                <br>
+                 Alert Date: {{ alert.alertDate }}
+               <br>
+
+
+
+               <div class="pull-right">
+                {% for alertStatus in alert.staffalerts_set.all %}
+                   {% if alertStatus.staffID|stringformat:"s" == staff_id and alertStatus.status == 'Unseen'%}
+                        <form action="{% url 'projectManager:alerts' %}" method="post">
+                         {% csrf_token %}
                        <button class="btn btn-success btn-md" value="{{ alert.alertID }}" name="unseen">Mark as Seen</button>
                         </form>
                         <br>
@@ -165,8 +191,33 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
             <br>
 
             {% endif %}
+   {% if alert.alertType == 'Project Request' %}
+
+                Request to be added to Project: <a target="_blank" href="{% url 'projectManager:projectprofile' alert.project.projectID %}">{{ alert.project.projectName }}</a> from <a target="_blank" href="{% url 'projectManager:staffprofile' alert.fromStaff.staffID %}">{{ alert.fromStaff.user.first_name }} {{ alert.fromStaff.user.last_name}}</a>
+                <br>
+                 Alert Date: {{ alert.alertDate }}
+               <br>
 
 
+
+               <div class="pull-right">
+                {% for alertStatus in alert.staffalerts_set.all %}
+                   {% if alertStatus.staffID|stringformat:"s" == staff_id and alertStatus.status == 'Unseen'%}
+                        <form action="{% url 'projectManager:alerts' %}" method="post">
+                         {% csrf_token %}
+                      <input type="number" value="{{ alert.project.projectID }}" name = "projectNum" hidden>
+                            <input type="number" value="{{ alert.alertID }}" name = "seen" hidden>
+                             <button class="btn btn-danger btn-md" value="{{ alert.fromStaff.staffID}}" name="reject"> <span class="glyphicon glyphicon-thumbs-down"></span> Decline</button>
+              <button class="btn btn-success btn-md" value="{{ alert.fromStaff.staffID}}" name="accept"> <span class="glyphicon glyphicon-thumbs-up"></span> Approve</button>
+                        </form>
+                        <br>
+                       {% endif %}
+            {% endfor %}
+
+               </div>
+            <br>
+
+            {% endif %}
 
             </div>
              <br>

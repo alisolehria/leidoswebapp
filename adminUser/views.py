@@ -10,8 +10,8 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from django.db.models import Q
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import Image
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 import os.path
 
 
@@ -68,9 +68,9 @@ def currentstaff_View(request):
         return HttpResponse(status=201)
 
 
-    list = profile.objects.exclude(workStatus="Not Employeed") ##get all the objects from profile table exclueding not employeed
-    title = "Currently Employeed"
-    return render(request,'staff/stafflist.html',{"list":list,"title":title})
+    list = projects.objects.filter(status="Completed") ##get all the objects from profile table exclueding not employeed
+    title = "Completed Projects"
+    return render(request,'project/projectlist.html',{"list":list,"title":title})
 
 @login_required()
 def currentprojects_View(request):
@@ -202,7 +202,7 @@ def projectprofile_View(request, project_id):
             project = projects.objects.filter(projectID=id[0])
             project.update(status="Declined")
             alert = alerts.objects.create(fromStaff=query, alertType='Project', alertDate=datetime.date.today(),
-                                          project=info)
+                                          project=info,info="Your Project Request")
             staffAlerts.objects.create(alertID=alert, staffID=info.projectManager, status="Unseen")
             alertobj = alerts.objects.get(Q(project=info) & Q(fromStaff=info.projectManager.staffID))
             staffalert = staffAlerts.objects.filter(alertID=alertobj.alertID)
@@ -214,7 +214,7 @@ def projectprofile_View(request, project_id):
             project = projects.objects.filter(projectID=id[0])
             project.update(status="Approved")
             alert = alerts.objects.create(fromStaff=query, alertType='Project', alertDate=datetime.date.today(),
-                                          project=info)
+                                          project=info,info="Your Project Request")
             staffAlerts.objects.create(alertID=alert, staffID=info.projectManager, status="Unseen")
             alertobj = alerts.objects.get(Q(project=info)&Q(fromStaff=info.projectManager.staffID))
             staffalert = staffAlerts.objects.filter(alertID=alertobj.alertID)
@@ -227,7 +227,7 @@ def projectprofile_View(request, project_id):
             info = projects.objects.get(projectID=id[0])
             project.update(status="Discontinued")
             alert = alerts.objects.create(fromStaff=query, alertType='Project', alertDate=datetime.date.today(),
-                                          project=info)
+                                          project=info,info="Project")
             working = info.staffID.all()
             for staff in working:
                 employee = profile.objects.get(staffID=staff.staffID)
@@ -246,7 +246,7 @@ def table_View(request):
     if query.designation != "Admin":  # check if admin
         return HttpResponse(status=201)
     # auto refresh view
-    num = profile.objects.exclude(workStatus="Not Employeed").count() #get number of staff
+    num = projects.objects.filter(status="Completed").count() #get number of staff
     projectNum = projects.objects.filter(status='On Going').count()#number of active projects
 
 
@@ -326,6 +326,9 @@ def addskill_View(request, staff_id):
         while x < count:
             staffWithSkills.objects.create(staffID_id=staff_id,skillID_id=skill[x],hoursAvailable=hrs[x])
             x = x + 1
+        alert = alerts.objects.create(fromStaff=query, alertType='Edit Staff', alertDate=datetime.date.today(),
+                                      info="Skill added to your profile")
+        staffAlerts.objects.create(alertID=alert, staffID=user, status="Unseen")
         messages.success(request, "Skill added succesfully!")
         return staffprofile_View(request, staff_id)
 
@@ -492,6 +495,10 @@ def editprofile_View(request,staff_id):
     if form.is_valid() and form2.is_valid():
         form.save()
         form2.save()
+        alert = alerts.objects.create(fromStaff=query, alertType='Edit Staff', alertDate=datetime.date.today(),
+                                      info="Profile Edited")
+        staffAlerts.objects.create(alertID=alert, staffID=info, status="Unseen")
+
         messages.success(request, info.user.first_name + " " + info.user.last_name + "'s account edited successfully!")
         return staffprofile_View(request,staff_id)
 
@@ -544,7 +551,7 @@ def alert_View(request):
             info = projects.objects.get(projectID=id[0])
             project.update(status="Declined")
             alert = alerts.objects.create(fromStaff=query, alertType='Project', alertDate=datetime.date.today(),
-                                          project=info)
+                                          project=info,info="Your Project Request")
             staffAlerts.objects.create(alertID=alert, staffID=info.projectManager, status="Unseen")
             alertobj = alerts.objects.get(Q(project=info) & Q(fromStaff=info.projectManager.staffID))
             staffalert = staffAlerts.objects.filter(alertID=alertobj.alertID)
@@ -557,7 +564,7 @@ def alert_View(request):
             info = projects.objects.get(projectID=id[0])
             project.update(status="Approved")
             alert = alerts.objects.create(fromStaff=query, alertType='Project', alertDate=datetime.date.today(),
-                                          project=info)
+                                          project=info,info="Your Project Request")
             staffAlerts.objects.create(alertID=alert, staffID=info.projectManager, status="Unseen")
             alertobj = alerts.objects.get(Q(project=info) & Q(fromStaff=info.projectManager.staffID))
             staffalert = staffAlerts.objects.filter(alertID=alertobj.alertID)
@@ -692,24 +699,53 @@ def report_View(request,project_id):
 
     # Create the PDF ob ject, using the response object as its "file."
     p = canvas.Canvas(response)
-    fn = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img/leidos.png')
-    p.drawImage(fn,200,730,width=None,height=None)
-
-    p.drawString(250, 710, "Project Report")
+    fn = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img/leidos_logo_2013.jpg')
+    p.drawImage(fn,0,782,width=600,height=60)
+    pdfmetrics.registerFont(TTFont('Georgia', 'Georgia.ttf'))
+    pdfmetrics.registerFont(TTFont('Calibri', 'Calibri.ttf'))
+    p.setFont('Georgia',32)
+    p.drawString(210, 750, "Project Report")
     # p.showPage()
 
     # Draw things on the PDF. Here's where the PDF generation happens.
     # See the ReportLab documentation for the full list of functionality.
-
-    p.drawString(20, 670, "Project ID: "+str(query.projectID))
-    p.drawString(20, 650, "Project Name: "+query.projectName)
-    p.drawString(20, 630, "Project Type: " + query.type)
-    p.drawString(20, 610, "Description: " + query.description)
-    p.drawString(20, 590, "Start Date: " + str(query.startDate) + "     End Date: " + str(query.endDate))
-    p.drawString(20, 570, "Project Manager: "+query.projectManager.user.first_name+" "+query.projectManager.user.last_name)
-
-
-
+    p.setFont('Calibri', 14)
+    p.drawString(20, 710, "Project ID: "+str(query.projectID))
+    p.drawString(20, 690, "Project Name: "+query.projectName+"    Status: "+query.status)
+    p.drawString(20, 670, "Project Type: " + query.type)
+    p.drawString(20, 650, "Description: " + query.description)
+    p.drawString(20, 600, "Start Date: " + str(query.startDate) + "     End Date: " + str(query.endDate))
+    p.drawString(20,580,"Country: "+query.location.country+"    City: "+query.location.city )
+    p.drawString(200, 540, "Project Manager: "+query.projectManager.user.first_name+" "+query.projectManager.user.last_name)
+    p.drawString(20,520,"Projet Manager Skill Level: "+str(query.projectManager.skillLevel))
+    p.drawString(20,500,"Project Manager Staff ID: "+str(query.projectManager.staffID))
+    p.drawString(20,480,"Project Manager Skills: ")
+    x = 460
+    i = 1
+    for skill in query.projectManager.skills_set.all():
+        p.drawString(140,x,str(i)+") "+skill.skillName)
+        x = x - 20
+        i = i + 1
+    p.showPage()
+    p.drawImage(fn, 0, 782, width=600, height=60)
+    p.setFont('Georgia', 32)
+    p.drawString(140, 750, "Staff Working on Project")
+    p.setFont('Calibri', 14)
+    x = 710
+    for staff in query.staffID.all():
+        p.drawString(20,x,"Staff ID: "+str(staff.staffID)+"     Name: "+staff.user.first_name+" "+" "+staff.user.last_name)
+        x = x - 20
+    p.showPage()
+    p.drawImage(fn, 0, 782, width=600, height=60)
+    p.setFont('Georgia', 32)
+    p.drawString(160, 750, "Skills for the Project")
+    x = 710
+    i = 1
+    p.setFont('Calibri', 14)
+    for skill in query.skills_set.all():
+        p.drawString(20,x,str(i)+") "+skill.skillName)
+        x = x - 20
+        i = i + 1
 
     # Close the PDF object cleanly, and we're done.
     p.showPage()

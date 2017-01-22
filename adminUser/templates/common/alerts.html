@@ -105,7 +105,7 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
             {% endif %}
              {% if alert.alertType == 'Staff' %}
 
-                Entry to Project Request from <a target="_blank" href="{% url 'adminUser:staffprofile' alert.fromStaff.staffID %}">{{ alert.fromStaff.user.first_name }} {{ alert.fromStaff.user.last_name }} </a>, Staff ID: {{ alert.fromStaff.staffID }}
+               Project Status Changed by: {{ alert.fromStaff.user.first_name }} {{ alert.fromStaff.user.last_name }}
                 <br>
                  Alert Date: {{ alert.alertDate }}
                <br>
@@ -113,16 +113,18 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
                <br>
                <a target="_blank" href="{% url 'adminUser:projectprofile' alert.project.projectID %}">Project Name: {{ alert.project.projectName }}</a>
                <br>
-               <div class="pull-right">
-                {% for alertStatus in alert.staffalerts_set.all %}
-                {% if alertStatus.status == "Unseen" and alertStatus.staffID|stringformat:"s" == staff_id %}
-               <input class="btn btn-danger btn-md" type="submit" value="Decline" name="rejectEntry"/>
-                <input class="btn btn-success btn-md" type="submit" value="Accept" name="acceptEntry"/>
+                 Status: {{ alert.project.status }}
+                 <br>
+                 <div class="pull-right">
+{% for alertStatus in alert.staffalerts_set.all %}
+    <form  class = "form-inline" action="{% url 'adminUser:alerts'%}" method="post">
+    {% csrf_token %}
+                {% if alertStatus.status == "Unseen"%}
+               <button class="btn btn-success btn-md" value="{{ alert.alertID }}" name="seen">Mark as Seen</button>
                    {% endif %}
-                  {% if alertStatus.status == "Seen" and alertStatus.staffID|stringformat:"s" == staff_id %}
-                   You have already taken action.
-                   {% endif %}
-                 {% endfor %}
+    </form>
+{% endfor %}
+
                </div>
                  <br>
             {% endif %}
