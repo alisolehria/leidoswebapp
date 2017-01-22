@@ -150,21 +150,21 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
                  <br>
                  Status: {{ alert.holiday.status }}
                   <br>
-               <div class="pull-right">
+              Type: {{ alert.holiday.type }}
+            <br>
+                    <div class="pull-right">
                 {% for alertStatus in alert.staffalerts_set.all %}
                    {% if alertStatus.staffID|stringformat:"s" == staff_id and alertStatus.status == 'Unseen'%}
                         <form action="{% url 'projectManager:alerts' %}" method="post">
                          {% csrf_token %}
-                            <input type="number" value="{{ alert.project.projectID }}" name = "ProjectNum" hidden>
-                             <button class="btn btn-danger btn-md" value="{{ alert.fromStaff.staffID}}" name="reject"> <span class="glyphicon glyphicon-thumbs-down"></span> Decline</button>
-              <button class="btn btn-success btn-md" value="{{ alert.fromStaff.staffID}}" name="accept"> <span class="glyphicon glyphicon-thumbs-up"></span> Approve</button>
+                       <button class="btn btn-success btn-md" value="{{ alert.alertID }}" name="unseen">Mark as Seen</button>
                         </form>
                         <br>
                        {% endif %}
             {% endfor %}
 
                </div>
-            <br>
+                    <br>
 
             {% endif %}
      {% if alert.alertType == 'Edit Staff' %}

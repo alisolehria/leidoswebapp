@@ -26,6 +26,7 @@ urlpatterns = [
         url(r'edit/(?P<project_id>[0-9]+)/$', views.editproject_View, name='editproject'),
         url(r'alerts/$', views.alert_View, name='alerts'),
         url(r'alerttab/$', views.alerttab_View, name='alertTab'),
-        url(r'projectrequest/$', views.projectrequests_View, name='projectrequest'),
+        url(r'requests/$', views.requests_View, name='requests'),
+        url(r'requestholiday/$', views.holiday_View, name='holidayrequest'),
         url(r'report/(?P<project_id>[0-9]+)/$', views.report_View, name='report'),
 ]

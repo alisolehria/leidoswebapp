@@ -157,11 +157,18 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#refresh").load
                  <br>
                 Leave End Date:   {{ alert.holiday.endDate }}
                   <br>
+                 Number of Days: {% sub {{ alert.holiday.endDate }} - {{ alert.holiday.startDate }}%}
+                 Leave Type: {{ alert.holiday.type }}
+                 <br>
                <div class="pull-right">
                 {% for alertStatus in alert.staffalerts_set.all %}
                 {% if alertStatus.status == "Unseen" and alertStatus.staffID|stringformat:"s" == staff_id %}
-               <input class="btn btn-danger btn-md" type="submit" value="Decline" name="rejectLeave"/>
-                <input class="btn btn-success btn-md" type="submit" value="Accept" name="acceptLeave"/>
+               <form  class = "form-inline" action="{% url 'adminUser:alerts'%}" method="post">
+                     {% csrf_token %}
+                <button class="btn btn-danger btn-md" value="{{ alert.holiday.holidayID}}" name="rejectLeave"> <span class="glyphicon glyphicon-thumbs-down"></span> Decline</button>
+
+              <button class="btn btn-success btn-md" value="{{ alert.holiday.holidayID}}" name="acceptLeave"> <span class="glyphicon glyphicon-thumbs-up"></span> Approve</button>
+                      </form>
                    {% endif %}
                   {% if alertStatus.status == "Seen" and alertStatus.staffID|stringformat:"s" == staff_id %}
                    You have already taken action.

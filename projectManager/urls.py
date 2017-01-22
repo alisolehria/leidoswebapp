@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'requestProject/$', views.requestproject_View, name='requestproject'),
     url(r'addSkill/(?P<project_id>[0-9]+)/$', views.addpskill_View, name='addskill'),
     url(r'addStaff/(?P<project_id>[0-9]+)/$', views.addpstaff_View, name='addstaff'),
+    url(r'requestholiday/$', views.holiday_View, name='holidayrequest'),
 ]

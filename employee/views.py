@@ -4,7 +4,7 @@ from accounts.models import profile, projects, skills, staffWithSkills, projects
 from adminUser.models import location
 from django.http import HttpResponse
 from django.db.models import Q
-from adminUser.forms import ProjectForm
+from adminUser.forms import HolidaysForm
 import datetime
 from django.contrib import messages
 
@@ -233,4 +233,29 @@ def alert_View(request):
             return projectprofile_View(request, project[0])
 
     return render(request,'sideBar/alerts.html',{"title":title,"alertList":alertList,"staff_id":staff_id})
+
+@login_required
+def holiday_View(request):
+
+    username = request.user
+    query = profile.objects.get(user = username) #get username
+
+    if query.designation != "Employee":  # check if employee
+        return HttpResponse(status=201)
+
+    title = "Request Leave"
+
+    form = HolidaysForm(request.POST or None)
+    admin = profile.objects.get(staffID=1)
+    if form.is_valid() and request.POST:
+        hol = form.save(commit=False)
+        hol.status="Pending Approval"
+        hol.staffID_id = query.staffID
+        hol.save()
+        alert = alerts.objects.create(fromStaff=query, alertType='Leave', alertDate=datetime.date.today(),
+                                      holiday=hol, info="Your Project Request")
+        staffAlerts.objects.create(alertID=alert, staffID=admin, status="Unseen")
+        messages.success(request, "Leave Requested!")
+
+    return render(request, 'eprofile/requestholiday.html', {"title":title, "form":form})
 

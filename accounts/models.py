@@ -62,6 +62,7 @@ class projects(models.Model):
         ('Consultancy', 'Consultancy'),
         ('Development', 'Development'),
         ('Delivery', 'Delivery'),
+        ('IT','IT')
     )
     type = models.CharField(max_length=30, choices=TYPE)
     location = models.ForeignKey('adminUser.location')
@@ -133,6 +134,7 @@ class holidays(models.Model):
     endDate = models.DateField()
     STATUS = (
         ('Approved', 'Approved'),
+        ('Pending Approval','Pending Approval'),
         ('Declined', 'Declined'),
     )
     TYPE = (
@@ -140,6 +142,7 @@ class holidays(models.Model):
         ('Emergency', 'Emergency'),
         ('Vacation', 'Vacation')
     )
+    type = models.CharField(max_length=30,choices=TYPE)
     status = models.CharField(max_length=30, choices=STATUS)
 
     def __str__(self):

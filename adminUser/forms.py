@@ -305,7 +305,6 @@ class HolidaysForm(forms.ModelForm):
     endDate = forms.DateField(label="End Date:",
                               widget=DateTimeWidget(options=dateTimeOptions, bootstrap_version=3))
     type = forms.ChoiceField(label="Project Type:", choices=holidays.TYPE)
-    description = forms.CharField(widget=forms.Textarea,label="Description:")
 
     class Meta:
         model = holidays
@@ -313,7 +312,6 @@ class HolidaysForm(forms.ModelForm):
             'type',
             'startDate',
             'endDate',
-            'description',
         ]
 
     helper = FormHelper()
@@ -333,13 +331,7 @@ class HolidaysForm(forms.ModelForm):
                             <br><br><br>
                         """),
         ),
-        Fieldset(
-            'Vacation Reason:',
-            'description',
-            HTML("""
-                        <br><br><br>
-                    """),
-        ),
+
     )
 
     def clean(self, *args, **kwargs):
@@ -348,8 +340,8 @@ class HolidaysForm(forms.ModelForm):
 
         if startDate > endDate:
             raise forms.ValidationError('Start Date Cannot Precede End Date')
-        if startDate == datetime.date.today():
-            raise forms.ValidationError('Cannot Start Holiday From Today')
+        if startDate < datetime.date.today():
+            raise forms.ValidationError('Cannot Start Holiday From Date Earlier Than Today')
 #        if startDate == endDate:
 #            raise forms.ValidationError('The Dates have Already Been Chosen, Please Try Again')
         return super(HolidaysForm, self).clean(*args, **kwargs)

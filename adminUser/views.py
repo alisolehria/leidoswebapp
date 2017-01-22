@@ -5,7 +5,7 @@ from .models import location
 from django.http import HttpResponse
 import datetime
 from django.contrib.auth.models import User
-from .forms import UserForm,UserProfileForm,ProjectForm, SkillForm, LocationForm, UserUpdateForm
+from .forms import UserForm,UserProfileForm,ProjectForm, SkillForm, LocationForm, UserUpdateForm, HolidaysForm
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.db.models import Q
@@ -476,6 +476,31 @@ def location_View(request):
 
     return render(request, 'common/location.html',{"title":title,"list":list,"form":form})
 
+@login_required
+def holiday_View(request):
+
+    username = request.user
+    query = profile.objects.get(user = username) #get username
+
+    if query.designation != "Admin":  # check if admin
+        return HttpResponse(status=201)
+
+    title = "Request Leave"
+
+    form = HolidaysForm(request.POST or None)
+
+    if form.is_valid() and request.POST:
+        hol = form.save(commit=False)
+        hol.status="Pending Approval"
+        hol.staffID_id = query.staffID
+        hol.save()
+        alert = alerts.objects.create(fromStaff=query, alertType='Leave', alertDate=datetime.date.today(),
+                                      holiday=hol, info="Your Project Request")
+        staffAlerts.objects.create(alertID=alert, staffID=query, status="Unseen")
+        messages.success(request, "Leave Requested!")
+
+    return render(request, 'staff/holiday.html',{"title":title,"form":form})
+
 
 @login_required
 def editprofile_View(request,staff_id):
@@ -529,50 +554,6 @@ def editproject_View(request,project_id):
 
     return render(request,'project/editproject.html',{"title":title,"pms":pms,"project":project,"form":form})
 
-@login_required
-def alert_View(request):
-
-    username = request.user
-    query = profile.objects.get(user = username) #get username
-
-    if query.designation != "Admin":  # check if admin
-        return HttpResponse(status=201)
-
-    title = "Alerts"
-
-
-    alertList = alerts.objects.filter(staff=query.staffID).order_by('-alertID')
-    staff_id = str(query.staffID)
-
-    if request.POST:
-        if "rejectProj" in request.POST:
-            id = request.POST.getlist("rejectProj")
-            project = projects.objects.filter(projectID=id[0])
-            info = projects.objects.get(projectID=id[0])
-            project.update(status="Declined")
-            alert = alerts.objects.create(fromStaff=query, alertType='Project', alertDate=datetime.date.today(),
-                                          project=info,info="Your Project Request")
-            staffAlerts.objects.create(alertID=alert, staffID=info.projectManager, status="Unseen")
-            alertobj = alerts.objects.get(Q(project=info) & Q(fromStaff=info.projectManager.staffID))
-            staffalert = staffAlerts.objects.filter(alertID=alertobj.alertID)
-            staffalert.update(status="Seen")
-            messages.success(request, "Project Status Changed")
-            return projectlist_View(request)
-        elif "acceptProj" in request.POST:
-            id = request.POST.getlist("acceptProj")
-            project = projects.objects.filter(projectID=id[0])
-            info = projects.objects.get(projectID=id[0])
-            project.update(status="Approved")
-            alert = alerts.objects.create(fromStaff=query, alertType='Project', alertDate=datetime.date.today(),
-                                          project=info,info="Your Project Request")
-            staffAlerts.objects.create(alertID=alert, staffID=info.projectManager, status="Unseen")
-            alertobj = alerts.objects.get(Q(project=info) & Q(fromStaff=info.projectManager.staffID))
-            staffalert = staffAlerts.objects.filter(alertID=alertobj.alertID)
-            staffalert.update(status="Seen")
-            messages.success(request, "Project Status Changed")
-            return projectlist_View(request)
-
-    return render(request,'common/alerts.html',{"title":title,"alertList":alertList,"staff_id":staff_id})
 
 @login_required
 def alerttab_View(request):
@@ -635,11 +616,37 @@ def alert_View(request):
             alertID = request.POST.getlist('seen')
             alertObj = staffAlerts.objects.filter(Q(alertID=alertID[0]) & Q(staffID=query.staffID))
             alertObj.update(status="Seen")
+        elif "rejectLeave" in request.POST:
+            id = request.POST.getlist("rejectLeave")
+            holiday = holidays.objects.filter(holidayID=id[0])
+            info = holidays.objects.get(holidayID=id[0])
+            holiday.update(status="Declined")
+            alert = alerts.objects.create(fromStaff=query, alertType='Leave', alertDate=datetime.date.today(),
+                                          holiday=info)
+            staffAlerts.objects.create(alertID=alert, staffID=info.staffID, status="Unseen")
+            alertobj = alerts.objects.get(Q(holiday=info) & Q(fromStaff=info.staffID.staffID))
+            staffalert = staffAlerts.objects.filter(alertID=alertobj.alertID)
+            staffalert.update(status="Seen")
+            messages.success(request, "Leave Status Changed")
+            return projectlist_View(request)
+        elif "acceptLeave" in request.POST:
+            id = request.POST.getlist("acceptLeave")
+            holiday = holidays.objects.filter(holidayID=id[0])
+            info = holidays.objects.get(holidayID=id[0])
+            holiday.update(status="Approved")
+            alert = alerts.objects.create(fromStaff=query, alertType='Leave', alertDate=datetime.date.today(),
+                                          holiday=info)
+            staffAlerts.objects.create(alertID=alert, staffID=info.staffID, status="Unseen")
+            alertobj = alerts.objects.get(Q(holiday=info) & Q(fromStaff=info.staffID.staffID))
+            staffalert = staffAlerts.objects.filter(alertID=alertobj.alertID)
+            staffalert.update(status="Seen")
+            messages.success(request, "Leave Status Changed")
+            return projectlist_View(request)
 
     return render(request,'common/alerts.html',{"title":title,"alertList":alertList,"staff_id":staff_id})
 
 @login_required
-def projectrequests_View(request):
+def requests_View(request):
 
     username = request.user
     query = profile.objects.get(user = username) #get username
@@ -647,10 +654,11 @@ def projectrequests_View(request):
     if query.designation != "Admin":  # check if admin
         return HttpResponse(status=201)
 
-    title = "Project Requests"
+    title = "Requests"
 
 
-    alertList = alerts.objects.filter(Q(staff=query.staffID)&Q(alertType="Project")&Q(project__status="Pending Approval")).order_by('-alertID')
+    alertList = alerts.objects.filter(Q(staff=query.staffID)&Q(alertType="Project")&Q(project__status="Pending Approval")|Q(alertType="Leave")&Q(holiday__status=
+                                                                                                                                                 "Pending Approval")).order_by('-alertID')
     staff_id = str(query.staffID)
 
     if request.POST:
@@ -680,8 +688,34 @@ def projectrequests_View(request):
             staffalert.update(status="Seen")
             messages.success(request, "Project Status Changed")
             return projectlist_View(request)
+        elif "rejectLeave" in request.POST:
+            id = request.POST.getlist("rejectLeave")
+            holiday = holidays.objects.filter(holidayID=id[0])
+            info = holidays.objects.get(holidayID=id[0])
+            holiday.update(status="Declined")
+            alert = alerts.objects.create(fromStaff=query, alertType='Leave', alertDate=datetime.date.today(),
+                                          holiday=info)
+            staffAlerts.objects.create(alertID=alert, staffID=info.staffID, status="Unseen")
+            alertobj = alerts.objects.get(Q(holiday=info) & Q(fromStaff=info.staffID.staffID))
+            staffalert = staffAlerts.objects.filter(alertID=alertobj.alertID)
+            staffalert.update(status="Seen")
+            messages.success(request, "Leave Status Changed")
+            return projectlist_View(request)
+        elif "acceptLeave" in request.POST:
+            id = request.POST.getlist("acceptLeave")
+            holiday = holidays.objects.filter(holidayID=id[0])
+            info = holidays.objects.get(holidayID=id[0])
+            holiday.update(status="Approved")
+            alert = alerts.objects.create(fromStaff=query, alertType='Leave', alertDate=datetime.date.today(),
+                                          holiday=info)
+            staffAlerts.objects.create(alertID=alert, staffID=info.staffID, status="Unseen")
+            alertobj = alerts.objects.get(Q(holiday=info) & Q(fromStaff=info.staffID.staffID))
+            staffalert = staffAlerts.objects.filter(alertID=alertobj.alertID)
+            staffalert.update(status="Seen")
+            messages.success(request, "Leave Status Changed")
+            return projectlist_View(request)
 
-    return render(request,'project/projectrequests.html',{"title":title,"alertList":alertList,"staff_id":staff_id})
+    return render(request,'common/requests.html',{"title":title,"alertList":alertList,"staff_id":staff_id})
 
 @login_required
 def report_View(request,project_id):
