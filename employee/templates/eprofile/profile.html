@@ -61,26 +61,36 @@ jQuery(document).ready(function(){setInterval(function(){jQuery("#alert").load('
 
 
           <div class="col-md-8">
-  <table class="table table-responsive table-hover">
+ <table class="table table-responsive table-hover">
     <tbody>
      <tr class="success">
-        <td class="dash">Staff ID: {{ info.staffID }}</td>
+        <td colspan="2" class="dash">Staff ID: {{ info.staffID }}</td>
       </tr>
       <tr class="info">
-        <td class="dash">First Name: {{ title.first_name }}</td>
-          <td class="dash">Last Name: {{ title.last_name }}</td>
+        <td colspan="2" class="dash">First Name: {{ title.first_name }}</td>
+          <td colspan="2" class="dash">Last Name: {{ title.last_name }}</td>
       </tr>
       <tr class="success">
-          <td class="dash">Nationality: {% get_country info.nationality as country %} {{ country.name }} </td>
-        <td class="dash">Status: {{ info.workStatus }}</td>
+          <td colspan="2" class="dash">Nationality: {% get_country info.nationality as country %} {{ country.name }} </td>
+        <td colspan="2" class="dash">Status: {{ info.workStatus }}</td>
       </tr>
      <tr class="active">
-          <td class="dash">Date Of Birth: {{ info.dateOfBirth }}</td>
-        <td class="dash">Location: {{ info.preferredLocation.country }}</td>
+          <td colspan="2" class="dash">Date Of Birth: {{ info.dateOfBirth }}</td>
+        <td colspan="2" class="dash">Location: {{ info.preferredLocation.country }}</td>
       </tr>
      <tr class="info">
-          <td class="dash">Skill Level: {{ info.skillLevel }}</td>
+          <td colspan="2" class="dash">Skill Level: {{ info.skillLevel }}</td>
       </tr>
+    {% for holiday in info.holidays_set.all %}
+        {% if holiday.status == "Approved" and holiday.startDate > time %}
+           <tr class="active">
+          <td class="dash">Upcoming Leave:</td>
+        <td class="dash">Leave Start Date: {{ holiday.startDate }}</td>
+            <td class="dash">Leave End Date: {{ holiday.endDate }}</td>
+           <td class="dash">Leave Type: {{ holiday.type }}</td>
+      </tr>
+        {% endif%}
+    {% endfor %}
 
     </tbody>
   </table>

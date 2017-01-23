@@ -25,10 +25,10 @@ def dashboard_View(request):
     projectNum = projects.objects.filter(status='On Going').count()#number of active projects
 
 
-    today = datetime.date.today() #get todays date
+    time = datetime.date.today() #get todays date
     upcoming = projects.objects.filter(status="Approved") #check if greater than todays date
 
-    return render(request, 'profile/dashboard.html',{"title":username,"info":query,'num':num,'projectNum':projectNum,'upcoming':upcoming})
+    return render(request, 'profile/dashboard.html',{"title":username,"info":query,'num':num,'projectNum':projectNum,'upcoming':upcoming,"time":time})
 
 @login_required()
 def stafflist_View(request):

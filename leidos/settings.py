@@ -77,7 +77,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'leidos.wsgi.application'
 
-LOGIN_URL = '/login/'
+LOGIN_URL = '/'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -86,9 +86,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'leidos',
-        'USER': 'root',
-        'PASSWORD': 'pass123',
-        'HOST': 'localhost',  # Or an IP Address that your DB is hosted on
+        'USER': 'be80a9eaefda8d',
+        'PASSWORD': '230394da',
+        'HOST': 'us-cdbr-azure-southcentral-f.cloudapp.net',  # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
 }

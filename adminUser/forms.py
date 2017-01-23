@@ -7,6 +7,7 @@ from crispy_forms.layout import Layout, Fieldset, Div, HTML, Field
 from datetimewidget.widgets import DateTimeWidget
 from django_countries.fields import LazyTypedChoiceField, countries
 import datetime
+from django.contrib.auth.models import User
 
 
 
@@ -334,7 +335,11 @@ class HolidaysForm(forms.ModelForm):
 
     )
 
+
     def clean(self, *args, **kwargs):
+        # username = User
+        # query = profile.objects.get(user=username)
+        # holiday = query.holidays_set.all()
         startDate = self.cleaned_data.get('startDate')
         endDate = self.cleaned_data.get('endDate')
 
@@ -342,8 +347,9 @@ class HolidaysForm(forms.ModelForm):
             raise forms.ValidationError('Start Date Cannot Precede End Date')
         if startDate < datetime.date.today():
             raise forms.ValidationError('Cannot Start Holiday From Date Earlier Than Today')
-#        if startDate == endDate:
-#            raise forms.ValidationError('The Dates have Already Been Chosen, Please Try Again')
+        # for hol in holiday:
+        #         if startDate >= hol.startDate and startDate <= hol.endDate or endDate >= hol.startDate and endDate <= hol.endDate:
+        #             raise forms.ValidationError('You Have Already Requested a Leave in Given Dates')
         return super(HolidaysForm, self).clean(*args, **kwargs)
 
     helper.form_tag = False

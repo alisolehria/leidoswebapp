@@ -47,13 +47,14 @@ def profile_View(request):
     skillhrset = list(skillhrs)
 
     skillwithhrs = {}
+    time = datetime.date.today()
 
     i = 0
     while i < len(skillset):
         skillwithhrs.update({skillset[i]: skillhrset[i]})
         i = i + 1
 
-    return render(request, 'profile/profile.html',{"title":username,"info":query,"ongoing":ongoing,"upcoming":upcoming,"completed":completed,"skillwithhrs":skillwithhrs})
+    return render(request, 'profile/profile.html',{"title":username,"info":query,"ongoing":ongoing,"upcoming":upcoming,"completed":completed,"skillwithhrs":skillwithhrs,"time":time})
 
 @login_required()
 def upcomingprojectsget_View(request, staff_id):

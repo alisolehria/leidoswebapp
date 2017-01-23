@@ -47,14 +47,14 @@ def profile_View(request):
     skillhrset = list(skillhrs)
 
     skillwithhrs = {}
-
+    time = datetime.date.today()  # get todays date
     i = 0
     while i < len(skillset):
         skillwithhrs.update({skillset[i]: skillhrset[i]})
         i = i + 1
 
 
-    return render(request, 'eprofile/profile.html',{"title":username,"info":query,"ongoing":ongoing,"upcoming":upcoming,"completed":completed,"skillwithhrs":skillwithhrs})
+    return render(request, 'eprofile/profile.html',{"title":username,"info":query,"ongoing":ongoing,"upcoming":upcoming,"completed":completed,"skillwithhrs":skillwithhrs,"time":time})
 
 @login_required()
 def myprojects_View(request):
